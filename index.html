@@ -3,1092 +3,862 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TILANDKY｜Threads 爆文分析儀表板</title>
+<title>Threads 六大關鍵字深度儀表板｜含留言分析</title>
 <style>
-:root {
-  --sage: #7D8A73;
-  --fog: #AEB8A2;
-  --cream: #F2EDE2;
-  --sand: #D6C9B3;
-  --dark-olive: #495640;
-  --gold: #C8A65A;
-  --bg: #F8F5F0;
-  --text: #2d2d2d;
-  --white: #ffffff;
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', sans-serif;
+  background: #f0ede8;
+  color: #2d2d2d;
+  min-height: 100vh;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Helvetica Neue', 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: var(--text); }
 
-/* ── Header ── */
-.header {
-  background: var(--dark-olive);
-  color: var(--cream);
-  padding: 20px 32px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.header-left h1 { font-size: 22px; letter-spacing: 3px; color: var(--gold); }
-.header-left p { font-size: 12px; color: var(--fog); margin-top: 4px; }
-.header-right { font-size: 12px; color: var(--sand); text-align: right; }
-.update-badge { background: var(--gold); color: var(--dark-olive); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-top: 6px; display: inline-block; }
-
-/* ── Stats Bar ── */
-.stats-bar {
-  background: var(--dark-olive);
-  border-top: 1px solid rgba(174,184,162,0.3);
-  padding: 10px 32px;
-  display: flex; gap: 32px;
-}
-.stat-item { text-align: center; }
-.stat-num { font-size: 22px; font-weight: bold; color: var(--gold); }
-.stat-label { font-size: 11px; color: var(--fog); }
-
-/* ── Tab Nav ── */
-.tab-nav {
-  background: var(--white);
-  border-bottom: 2px solid var(--sand);
-  padding: 0 24px;
-  display: flex; gap: 0; overflow-x: auto;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.tab-btn {
-  padding: 14px 20px;
-  border: none; background: none;
-  font-size: 13px; font-weight: 500;
-  color: #888; cursor: pointer;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-.tab-btn:hover { color: var(--sage); }
-.tab-btn.active { color: var(--dark-olive); border-bottom-color: var(--gold); font-weight: 700; }
-
-/* ── Content ── */
-.tab-content { display: none; padding: 24px 32px; max-width: 1200px; margin: 0 auto; }
-.tab-content.active { display: block; }
-
-/* ── Post Card ── */
-.post-card {
-  background: var(--white);
-  border: 1px solid var(--sand);
-  border-radius: 12px;
-  margin-bottom: 24px;
+/* ── HEADER ── */
+header {
+  background: linear-gradient(135deg, #3d2b1f 0%, #6b3d2e 50%, #8b5a3a 100%);
+  color: white;
+  padding: 36px 40px 28px;
+  position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E") repeat;
+}
+header h1 { font-size:24px; font-weight:700; letter-spacing:1px; position:relative; z-index:1; }
+header p { font-size:13px; opacity:.7; margin-top:6px; position:relative; z-index:1; }
+.header-meta {
+  display: flex; align-items: center; gap: 20px; margin-top: 14px;
+  position: relative; z-index: 1; flex-wrap: wrap;
+}
+.meta-badge {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.back-btn {
+  background: rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.35);
+  color: white; text-decoration: none;
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  transition: background .2s;
+}
+.back-btn:hover { background: rgba(255,255,255,.3); }
+
+/* ── KEYWORD TABS ── */
+.kw-tabs {
+  background: #2d2d2d;
+  display: flex; overflow-x: auto; gap: 0;
+  border-bottom: 3px solid #6b3d2e;
+  scrollbar-width: none;
+}
+.kw-tabs::-webkit-scrollbar { display: none; }
+.kw-tab {
+  flex-shrink: 0;
+  padding: 14px 22px;
+  color: rgba(255,255,255,.6);
+  cursor: pointer;
+  font-size: 14px; font-weight: 600;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all .2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.kw-tab:hover { color: white; background: rgba(255,255,255,.05); }
+.kw-tab.active { color: white; border-bottom-color: #d4a574; }
+
+/* ── MAIN CONTENT ── */
+.page { display: none; max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+.page.active { display: block; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  background: white; border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  padding: 24px 28px; margin-bottom: 28px;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.page-emoji { font-size: 48px; flex-shrink: 0; }
+.page-kw-title { font-size: 28px; font-weight: 800; color: #3d2b1f; }
+.page-kw-sub { font-size: 14px; color: #777; margin-top: 4px; line-height: 1.6; }
+.page-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.tag {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+}
+.tag-pain { background: #fde8e8; color: #c0392b; }
+.tag-seek { background: #e8f4fd; color: #2474aa; }
+.tag-tool { background: #e8fdf0; color: #1a7a40; }
+.tag-soul { background: #f3e8ff; color: #7a2c8b; }
+
+/* ── INSIGHT BOX ── */
+.insight-strip {
+  background: linear-gradient(135deg, #fff8f0, #fef3e2);
+  border-radius: 12px; padding: 18px 22px; margin-bottom: 28px;
+  border: 1px solid #f0d9b5;
+}
+.insight-strip-title {
+  font-size: 11px; font-weight: 700; color: #8b5a3a;
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
+}
+.insight-strip-text { font-size: 13px; line-height: 1.75; color: #5a4a3a; }
+.insight-strip-text strong { color: #6b3d2e; }
+
+/* ── POST CARD ── */
+.post-card {
+  background: white; border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  margin-bottom: 28px; overflow: hidden;
 }
 .post-header {
-  background: var(--cream);
-  padding: 14px 20px;
-  display: flex; justify-content: space-between; align-items: flex-start;
-  border-bottom: 1px solid var(--sand);
+  padding: 20px 24px 0;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
 }
-.post-author { font-weight: 700; color: var(--dark-olive); font-size: 14px; }
-.post-date { font-size: 12px; color: #888; margin-top: 2px; }
-.post-link { font-size: 12px; color: var(--sage); text-decoration: none; }
-.post-link:hover { color: var(--dark-olive); }
-.post-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-.metric { display: flex; align-items: center; gap: 4px; font-size: 13px; }
-.metric-icon { font-size: 15px; }
-.metric-likes { color: #e84040; font-weight: bold; }
-.metric-comments { color: var(--sage); font-weight: bold; }
-.metric-views { color: #888; }
+.post-num {
+  font-size: 11px; font-weight: 700; color: #8b5a3a;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  background: #faf0e8; padding: 4px 12px; border-radius: 20px;
+}
+.threads-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1a1a1a; color: white;
+  padding: 7px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  transition: background .2s;
+}
+.threads-link:hover { background: #3d2b1f; }
+.threads-link svg { width: 14px; height: 14px; fill: white; }
 
-.post-body { padding: 16px 20px; }
-.post-text {
-  font-size: 14px; line-height: 1.8; color: #333;
-  border-left: 3px solid var(--fog);
-  padding-left: 14px;
-  max-height: 180px; overflow: hidden;
-  transition: max-height 0.3s ease;
+.post-author {
+  padding: 14px 24px 4px;
+  font-size: 13px; color: #888;
 }
-.post-text.expanded { max-height: 9999px; }
-.expand-btn {
-  font-size: 12px; color: var(--sage); background: none;
-  border: none; cursor: pointer; margin-top: 8px; padding: 0;
-}
-.expand-btn:hover { color: var(--dark-olive); }
+.post-author strong { color: #3d2b1f; }
 
-/* Comments */
-.comments-section { padding: 0 20px 16px; }
-.comments-title { font-size: 12px; font-weight: 700; color: var(--sage); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-.comment-item {
-  background: var(--bg);
-  border-radius: 8px; padding: 10px 14px;
-  margin-bottom: 8px; border-left: 3px solid var(--fog);
+.post-content {
+  padding: 8px 24px 16px;
+  font-size: 14px; line-height: 1.75; color: #333;
+  border-bottom: 1px solid #f5f5f5;
 }
-.comment-user { font-size: 12px; font-weight: 600; color: var(--dark-olive); }
-.comment-text { font-size: 13px; color: #555; margin-top: 4px; line-height: 1.6; }
 
-/* Tilandky Suggestion */
-.suggestion-box {
-  margin: 0 20px 16px;
-  background: linear-gradient(135deg, #f0f4ec, #fff8f0);
-  border: 1px solid var(--gold);
-  border-radius: 10px;
-  padding: 14px 16px;
+/* engage row */
+.engage-row {
+  padding: 12px 24px;
+  display: flex; gap: 20px; flex-wrap: wrap;
+  border-bottom: 1px solid #f5f5f5;
 }
-.suggestion-title { font-size: 12px; font-weight: 700; color: var(--gold); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-.suggestion-content { font-size: 13px; color: #555; line-height: 1.7; }
-.suggestion-tag { display: inline-block; background: var(--sage); color: white; padding: 2px 8px; border-radius: 20px; font-size: 11px; margin: 3px 2px 0; }
-.suggestion-tag.gold { background: var(--gold); }
-
-/* Viral Analysis Page */
-.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-@media (max-width: 768px) { .analysis-grid { grid-template-columns: 1fr; } }
-.analysis-card {
-  background: var(--white);
-  border-radius: 12px; padding: 20px;
-  border: 1px solid var(--sand);
+.engage-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; font-weight: 700; color: #555;
 }
-.analysis-card h3 { font-size: 15px; color: var(--dark-olive); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.pain-item, .belief-item {
-  background: var(--bg);
-  border-radius: 8px; padding: 12px 14px;
-  margin-bottom: 10px; border-left: 4px solid var(--sage);
+.engage-item .ei { font-size: 16px; }
+.engage-red { color: #c0392b; }
+
+/* comments section */
+.comments-section { padding: 20px 24px 24px; }
+.comments-title {
+  font-size: 12px; font-weight: 700; color: #8b5a3a;
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
 }
-.pain-item.hot { border-left-color: #e84040; }
-.pain-item.gold { border-left-color: var(--gold); }
-.pain-title { font-size: 13px; font-weight: 600; color: var(--dark-olive); }
-.pain-desc { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.6; }
-.pain-example { font-size: 11px; color: var(--sage); margin-top: 6px; font-style: italic; }
-
-.content-plan-card {
-  background: var(--white);
-  border-radius: 12px; padding: 20px;
-  border: 1px solid var(--sand);
-  margin-bottom: 20px;
+.comments-title::after {
+  content: ''; flex: 1;
+  height: 1px; background: #f0d9b5;
 }
-.content-plan-card h3 { font-size: 15px; color: var(--dark-olive); margin-bottom: 14px; border-bottom: 2px solid var(--gold); padding-bottom: 8px; }
-.plan-item { padding: 12px 0; border-bottom: 1px solid var(--sand); display: flex; gap: 14px; align-items: flex-start; }
-.plan-item:last-child { border-bottom: none; }
-.plan-num { background: var(--gold); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; }
-.plan-text h4 { font-size: 13px; font-weight: 600; color: var(--dark-olive); }
-.plan-text p { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.6; }
-.plan-text .hook { font-size: 12px; color: var(--sage); margin-top: 6px; font-style: italic; background: var(--bg); padding: 6px 10px; border-radius: 6px; }
 
-.cluster-section { margin-bottom: 28px; }
-.cluster-title { font-size: 16px; font-weight: 700; color: var(--dark-olive); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-.cluster-subtitle { font-size: 12px; color: #888; margin-bottom: 14px; }
-.cluster-summary { font-size: 13px; color: #555; line-height: 1.8; background: var(--cream); padding: 14px 16px; border-radius: 10px; border-left: 4px solid var(--sage); }
+.comment {
+  display: flex; gap: 12px; margin-bottom: 12px;
+  padding-bottom: 12px; border-bottom: 1px dashed #f0ede8;
+}
+.comment:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.comment-num {
+  width: 24px; height: 24px;
+  background: #f0d9b5; color: #6b3d2e;
+  border-radius: 50%; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.comment-body { flex: 1; }
+.comment-user {
+  font-size: 11px; font-weight: 700; color: #8b5a3a;
+  margin-bottom: 3px;
+}
+.comment-text {
+  font-size: 13px; line-height: 1.65; color: #444;
+}
 
-.page-title { font-size: 20px; font-weight: 700; color: var(--dark-olive); margin-bottom: 6px; }
-.page-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
-.section-title { font-size: 17px; font-weight: 700; color: var(--dark-olive); margin: 28px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--sand); }
-.keyword-tag { display: inline-block; background: var(--cream); color: var(--dark-olive); border: 1px solid var(--sand); padding: 3px 10px; border-radius: 20px; font-size: 11px; margin-right: 6px; font-weight: 500; }
+/* ── DIVIDER ── */
+.section-divider {
+  font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: #8b5a3a;
+  margin: 8px 0 20px; padding-bottom: 8px;
+  border-bottom: 2px solid #d4a574;
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #2d2d2d; color: rgba(255,255,255,.5);
+  text-align: center; padding: 24px; font-size: 12px;
+  margin-top: 40px; line-height: 1.8;
+}
+footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+footer a:hover { color: white; }
 </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="header-left">
-    <h1>✦ TILANDKY</h1>
-    <p>馬雅之鏡・靈魂陪伴品牌｜Threads 爆文分析儀表板</p>
+<header>
+  <h1>🔍 Threads 六大關鍵字 · 深度留言分析</h1>
+  <p>每個關鍵字精選真實熱門貼文 · 含 Top 5 留言 · 連結原始頁面</p>
+  <div class="header-meta">
+    <span class="meta-badge">📅 2026-05-23</span>
+    <span class="meta-badge">6 個關鍵字</span>
+    <span class="meta-badge">真實留言數據</span>
+    <a href="index .html" class="back-btn">← 返回總覽儀表板</a>
   </div>
-  <div class="header-right">
-    <div>資料更新時間：2026-05-22</div>
-    <div class="update-badge">🔄 每日 09:00 自動更新</div>
+</header>
+
+<!-- TAB BAR -->
+<div class="kw-tabs">
+  <div class="kw-tab active" onclick="switchTab(0)">😮‍💨 情緒內耗</div>
+  <div class="kw-tab" onclick="switchTab(1)">🚧 事業卡關</div>
+  <div class="kw-tab" onclick="switchTab(2)">🌸 活出自己</div>
+  <div class="kw-tab" onclick="switchTab(3)">💔 關係困境</div>
+  <div class="kw-tab" onclick="switchTab(4)">🧭 找不到方向</div>
+  <div class="kw-tab" onclick="switchTab(5)">💎 自我價值</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 1: 情緒內耗 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page active" id="page-0">
+  <div class="page-header">
+    <div class="page-emoji">😮‍💨</div>
+    <div>
+      <div class="page-kw-title">情緒內耗</div>
+      <div class="page-kw-sub">高敏感族群最大困擾 · 職場、人際關係都是觸發點<br>受眾需要「被看見」＋「根源清理」的方法</div>
+      <div class="page-tags">
+        <span class="tag tag-pain">高敏感</span>
+        <span class="tag tag-pain">職場壓力</span>
+        <span class="tag tag-seek">情緒管理</span>
+        <span class="tag tag-tool">希塔療癒</span>
+        <span class="tag tag-soul">彩虹數字</span>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Stats Bar -->
-<div class="stats-bar">
-  <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">關鍵字類別</div></div>
-  <div class="stat-item"><div class="stat-num">20</div><div class="stat-label">精選貼文</div></div>
-  <div class="stat-item"><div class="stat-num">3,977</div><div class="stat-label">總讚數</div></div>
-  <div class="stat-item"><div class="stat-num">1,851</div><div class="stat-label">最高單篇讚數</div></div>
-  <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">內在狀態分群</div></div>
-</div>
+  <div class="insight-strip">
+    <div class="insight-strip-title">💡 Tilandky 內容切入角度</div>
+    <div class="insight-strip-text">
+      留言顯示受眾最想要的是<strong>實用快速的方法清單</strong>（戴耳機、定時散步）。
+      Tilandky 可以從「方法治標，根源才能治本」切入，引導到<strong>希塔療癒清理情緒記憶</strong>，
+      以及用<strong>彩虹數字</strong>揭示「為什麼你特別容易被別人的能量影響」。
+    </div>
+  </div>
 
-<!-- Tab Navigation -->
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('身心靈')">🌿 身心靈</button>
-  <button class="tab-btn" onclick="switchTab('自我覺察')">🪞 自我覺察</button>
-  <button class="tab-btn" onclick="switchTab('情緒療癒')">💧 情緒療癒</button>
-  <button class="tab-btn" onclick="switchTab('馬雅曆')">🌀 馬雅曆</button>
-  <button class="tab-btn" onclick="switchTab('彩虹數字')">🌈 彩虹數字</button>
-  <button class="tab-btn" onclick="switchTab('人生定位')">🧭 人生定位</button>
-  <button class="tab-btn" onclick="switchTab('爆文分析')">🔥 爆文分析</button>
-</div>
-
-<!-- ═══════════ 身心靈 TAB ═══════════ -->
-<div id="tab-身心靈" class="tab-content active">
-  <div class="page-title">身心靈</div>
-  <div class="page-subtitle">共 8 篇精選貼文 · 篩選條件：讚數 50+，真實討論氛圍</div>
+  <div class="section-divider">📌 精選貼文 #1</div>
 
   <!-- Post 1 -->
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@wishingstarland（朵朵）</div>
-        <div class="post-date">📅 2026-05-21（1天前）</div>
-        <div><a href="https://www.threads.com/@wishingstarland/post/DYlgMSgkSRS" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">554</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">364</span></span>
-        <span class="metric"><span class="metric-icon">👁</span><span class="metric-views">1.1萬</span></span>
-      </div>
+      <span class="post-num">熱門貼文 #1</span>
+      <a class="threads-link" href="https://www.threads.com/@morris_at_calord/post/DQpTgKWAXrF" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-1">請Threads 演算法 帶我認識以下這些人：<br>1.喜歡大自然🍃的人<br>2.喜歡冥想 靜坐的人<br>3.喜歡身心靈的人<br>4.追求身心靈平衡、健康的人<br>5.對玄學、哲學、心理學有興趣的人<br><br>只要符合其中以上幾項，歡迎留言說嗨</div>
-      <button class="expand-btn" onclick="toggleText('text-1',this)">▼ 展開全文</button>
+    <div class="post-author">作者：<strong>@morris_at_calord</strong></div>
+    <div class="post-content">
+      有沒有人也是高敏感人格，想請教有無實用的降低內耗的方法。<br>
+      因為我超容易受到身邊人的情緒影響，一點小事就開始焦慮停不下來，下班之後很難切換，
+      已經嚴重到影響到生活和工作了。
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">👁️</span> <span class="engage-red">17萬</span> 瀏覽</span>
+      <span class="engage-item"><span class="ei">💬</span> 大量回覆</span>
+      <span class="engage-item"><span class="ei">🔁</span> 高分享</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言</div>
-      <div class="comment-item"><div class="comment-user">@yinning07</div><div class="comment-text">這個人不就是我嗎？我有藝術瑜珈心靈露營，同類人一起來😊</div></div>
-      <div class="comment-item"><div class="comment-user">@aliendelegate</div><div class="comment-text">外星文明代表 👋</div></div>
-      <div class="comment-item"><div class="comment-user">@yuxinglan6</div><div class="comment-text">大家好🙌😋 我們晚上有線上讀書分享～會聊人性、關係、社會觀察，很有趣，氣氛輕鬆</div></div>
-      <div class="comment-item"><div class="comment-user">@maya.playground</div><div class="comment-text">我在是Claire👋🏻 瑪雅十三月亮曆教學/解盤路過～</div></div>
-      <div class="comment-item"><div class="comment-user">@powuming</div><div class="comment-text">大家好，我每天跟大家分享這個世界的底層運行規則原理，歡迎大家來與我交流</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        仿「召喚同類型靈魂」格式，發「請 Threads 演算法帶我認識這樣的人」互動貼文。列出：喜歡馬雅曆 / 彩虹數字 / 希望找到人生方向的女性 / 正在轉職或創業的人。這類格式留言數極高，能快速累積 TA 互動。
-        <br><br>
-        <span class="suggestion-tag">馬雅曆</span>
-        <span class="suggestion-tag">彩虹數字</span>
-        <span class="suggestion-tag gold">互動型貼文</span>
-        <span class="suggestion-tag">召喚同溫層</span>
+      <div class="comments-title">💬 Top 5 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">有些不必要的焦慮是「前事後置」、「後事前置」…下班時能保持穩定心情，你就贏了。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">我是來工作的，不是來處理你的情緒的。大家都是大人了，各自的情緒自己處理。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">@retryricebucket</div>
+          <div class="comment-text">以下是我的方法👍<br>1. 減少一天能量消耗：通勤戴耳塞、耳機<br>2. 補充能量：吃巧克力、看貓貓影片<br>3. 覺察焦慮並應對：快吸慢吐<br>4. 正念：將你的價值與情緒交付給重要的人</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">4</div>
+        <div class="comment-body">
+          <div class="comment-user">@therabbitsaid</div>
+          <div class="comment-text">看看身旁的同事，覺得他這麼爛都可以理直氣壯活著，我為什麼不行？我比他好太多了吧 😍</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">5</div>
+        <div class="comment-body">
+          <div class="comment-user">@brownsugarkake</div>
+          <div class="comment-text">我試過幾個粗暴有用的方法 🤣<br>1. 每天 block 一段專心工作的時間<br>2. 每個禮拜有一兩天 WFH<br>3. 戴耳機工作<br>4. 定時出門散步</div>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="section-divider">📌 精選貼文 #2</div>
 
   <!-- Post 2 -->
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@ladieschat.tw（大人女子會）</div>
-        <div class="post-date">📅 2026-03-14</div>
-        <div><a href="https://www.threads.com/@ladieschat.tw" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">226</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">169</span></span>
-      </div>
+      <span class="post-num">熱門貼文 #2</span>
+      <a class="threads-link" href="https://www.threads.com/@tsaiiyann/post/DYm5ZVdEvS4" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-2">有人認識很厲害的身心靈或手作老師嗎？在線等！🥺🙏<br>或其他特殊體驗課程適合女孩子一起玩的也可以。我們家「大人女子會」想多辦體驗課啦～<br>只要是適合女孩子、能讓我們變美或心靈富足的課程，不管是塔羅、香氛、還是美感攝影⋯⋯通通都想試！<br>自薦、推薦都超級歡迎，老師們快來把我們領走吧。</div>
-      <button class="expand-btn" onclick="toggleText('text-2',this)">▼ 展開全文</button>
+    <div class="post-author">作者：<strong>@tsaiiyann</strong></div>
+    <div class="post-content">
+      當一個人帶給你負面情緒讓你內耗時，該怎麼舒壓比較好..
     </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言（頁面捲動收集）</div>
-      <div class="comment-item"><div class="comment-user">多位老師自薦留言</div><div class="comment-text">塔羅師、香氛老師、能量老師等紛紛自薦，展示課程照片和特色</div></div>
-      <div class="comment-item"><div class="comment-user">粉絲推薦留言</div><div class="comment-text">「推薦我認識的馬雅曆老師，很棒！」「有認識做彩虹數字的老師～」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        直接在此類「徵老師」貼文下留言自薦！強調：彩虹數字 × 馬雅曆 = 讓女生更了解自己的靈魂藍圖，適合女性聚會課程。可附上課程特色與合作方式。
-        <br><br><span class="suggestion-tag gold">主動留言自薦</span><span class="suggestion-tag">女性族群</span><span class="suggestion-tag">異業合作</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Post 3 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@bonnie_dayrr</div>
-        <div class="post-date">📅 2026-05-21（1天前）</div>
-        <div><a href="https://www.threads.com/@bonnie_dayrr/post/DYlVumZExni" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">102</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">109</span></span>
-        <span class="metric"><span class="metric-icon">👁</span><span class="metric-views">2,865</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-3">請threads演算法 帶我認識有自信有能量的女性朋友🦋<br>1.喜歡旅遊<br>2.是媽媽也努力活成自己想要的樣子<br>3.正在為未來自由人生努力<br>4.有執行力、熱情<br>5.樂於分享<br>5.對身心靈感興趣<br>6.善良<br>7.住高雄<br><br>我想交朋友並且洗一下我的演算法跟版面💕</div>
-      <button class="expand-btn" onclick="toggleText('text-3',this)">▼ 展開全文</button>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">💬</span> 多則回覆</span>
+      <span class="engage-item"><span class="ei">❤️</span> 互動熱烈</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言</div>
-      <div class="comment-item"><div class="comment-user">@sunguanciao</div><div class="comment-text">全中！1.喜歡旅遊 2.是媽媽也努力活成自己想要的樣子 3.正在為未來自由人生努力 4.有執行力、熱情 5.樂於分享 6.對身心靈感興趣 7.善良 還多一個 8.愛聊天💬</div></div>
-      <div class="comment-item"><div class="comment-user">@pinstarot</div><div class="comment-text">我（舉手）北高雄 30年塔羅占卜經驗 小孩都大學了 努力活出自己的樣子～</div></div>
-      <div class="comment-item"><div class="comment-user">@wife.shopping</div><div class="comment-text">天啊‼️我全部都是，莫非我是真命天女</div></div>
-      <div class="comment-item"><div class="comment-user">@maya.playground</div><div class="comment-text">一寶媽的瑪雅曆老師👋🏻 除了住高雄之外都有唷🥰</div></div>
-      <div class="comment-item"><div class="comment-user">@mirandayang0806</div><div class="comment-text">想加1，但是少了2（不是媽媽）</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        針對「媽媽族群」發一篇「我想認識這樣的媽媽」，主打「努力活成自己想要的樣子」的共鳴點，連結彩虹數字幫助媽媽找回自我天賦的課程定位。
-        <br><br><span class="suggestion-tag">媽媽族群</span><span class="suggestion-tag">30-50歲TA</span><span class="suggestion-tag gold">自我認同</span>
+      <div class="comments-title">💬 Top 5 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">@dai.yin.hong</div>
+          <div class="comment-text">會讓你內耗及陷入負面情緒的那個人就是問題，請解決問題。</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Post 4 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@gaga.mandala.art</div>
-        <div class="post-date">📅 2026-05-16（6天前）</div>
-        <div><a href="https://www.threads.com/@gaga.mandala.art/post/DYXXWS4k76l" target="_blank" class="post-link">🔗 查看原文</a></div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">你有你自己的人生要顧，不要擅自背負他人的課題，那是他自己要面對的。</div>
+        </div>
       </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">53</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">25</span></span>
-        <span class="metric"><span class="metric-icon">👁</span><span class="metric-views">2,462</span></span>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">@googleman0811</div>
+          <div class="comment-text">一定要遠離在深淵的那個人，你給你的負面也會讓你自己掉進去的。</div>
+        </div>
       </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-4">脆友們如雪花般的私訊，這篇一次回覆😎<br>很多人問我：「現在有推薦去哪裡上課嗎？」<br>我不再替任何身心靈公司抬轎。開公司本來就需要盈利，但它們不是聖殿，不需要被神化。<br><br>警示燈出現：<br>👉🏻頻繁互相下跪造神<br>👉🏻批評別的學院是邪教<br>👉🏻說不來上課的人被下符咒<br>👉🏻自稱能與佛祖對話<br><br>真正的智慧不是一直追隨誰，而是能回到生活裡，面對自己。</div>
-      <button class="expand-btn" onclick="toggleText('text-4',this)">▼ 展開全文</button>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言</div>
-      <div class="comment-item"><div class="comment-user">@jianwei.lin.714</div><div class="comment-text">言論自由 自主意識自由 身心自由 辛苦妳了🫡 我只撐一年就裝不下去了🤣 一直用框架叫我們不要被框架</div></div>
-      <div class="comment-item"><div class="comment-user">@s0930731628</div><div class="comment-text">真正穩定的人，不會因為離開某個團體，就失去自己。妳很難得的一點是，妳沒有用「我醒了、你們都沒醒」的姿態去講這些。</div></div>
-      <div class="comment-item"><div class="comment-user">@heather0329life</div><div class="comment-text">2022我聽到他們要傳愛、一直叫我傳愛，我就好想吐🤮</div></div>
-      <div class="comment-item"><div class="comment-user">@chuangdora</div><div class="comment-text">智慧跟知識本身沒問題，有問題的是人…所以也不需要特別去攻擊課程倒是</div></div>
-      <div class="comment-item"><div class="comment-user">@ms.cindyfq</div><div class="comment-text">目前看到關於身心靈產業最喜歡的一番見解😌🥰讓我有所收穫和反思</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        這篇揭示「身心靈課程的信任危機」大量引發共鳴。Tilandky 可發「我如何選擇一個對的工具」——強調馬雅曆和彩虹數字是「給你地圖，不是給你答案」，建立「不依賴、不造神」的透明品牌形象，直接回應市場痛點。
-        <br><br><span class="suggestion-tag gold">建立信任感</span><span class="suggestion-tag">反身心靈焦慮</span><span class="suggestion-tag">差異化定位</span>
+      <div class="comment">
+        <div class="comment-num">4</div>
+        <div class="comment-body">
+          <div class="comment-user">@kerensa1210</div>
+          <div class="comment-text">找朋友一起開心喝酒 🥳</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Post 5 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@justquiet3011</div>
-        <div class="post-date">📅 2026-05-15</div>
-        <div><a href="https://www.threads.com/@justquiet3011" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">146</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">42</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-5">今年十月，就是離職滿五年的日子，當初大概存了半年的生活費，其實我物慾低，只是單純想把身體養好，讓身心都慢慢回歸原位...<br>雖然少了薪水，但帳單還是每個月都會準時到，存款一點一點的消失，但其實沒有焦慮，也沒有擔心，或許是身心靈慢慢恢復歸位，感覺是舒適的...<br>積蓄早就見底，後續都是靠家人的幫忙才能撐到今天，但最近有種山窮水盡的感覺，開始擔心帳單該怎麼繳...<br>原本的自在感也慢慢不見，好像是換了地方焦慮，希望能早日找到出路...</div>
-      <button class="expand-btn" onclick="toggleText('text-5',this)">▼ 展開全文</button>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言（代表性整理）</div>
-      <div class="comment-item"><div class="comment-user">留言方向①</div><div class="comment-text">「我也是這樣，身心靈讓我撐過來了，但現實還是要面對」</div></div>
-      <div class="comment-item"><div class="comment-user">留言方向②</div><div class="comment-text">「你有試過用什麼工具找方向嗎？我用人類圖/馬雅曆找到出路的」</div></div>
-      <div class="comment-item"><div class="comment-user">留言方向③</div><div class="comment-text">共鳴留言：支持、鼓勵為主，帶有「你不孤單」能量</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        針對「自由工作者/轉職期的財務焦慮 + 身心靈困境」族群，發一篇「當身心靈還不夠、現實還在燒」的共感貼文，分享馬雅曆如何幫助找到天賦方向，帶出課程或個案服務。
-        <br><br><span class="suggestion-tag">轉職族群</span><span class="suggestion-tag">現實困境</span><span class="suggestion-tag gold">共感型貼文</span>
+      <div class="comment">
+        <div class="comment-num">5</div>
+        <div class="comment-body">
+          <div class="comment-user">@yixiang8859</div>
+          <div class="comment-text">跑步、散步、騎腳踏車、游泳。</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ 自我覺察 TAB ═══════════ -->
-<div id="tab-自我覺察" class="tab-content">
-  <div class="page-title">自我覺察</div>
-  <div class="page-subtitle">共 5 篇精選貼文 · 讚數 100+ 優先收錄</div>
-
-  <!-- Post 1 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@v.0614（不懂問脆）</div>
-        <div class="post-date">📅 2026-02-15</div>
-        <div><a href="https://www.threads.com/@v.0614" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">274</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">97</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-6">我很好奇那種有自我意識的人有多少<br>就是那種自我覺察的<br>不易被操控的人<br>知道自己在幹嘛的人到底有多少？</div>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍（97則）</div>
-      <div class="comment-item"><div class="comment-user">高頻留言方向</div><div class="comment-text">「我也想知道！這樣的人好像很少」「其實很多人以為自己清醒，但只是換個方式被操控」「自我覺察需要練習，不是天生的」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        發「你覺得自己清醒嗎？」問答型貼文，附上彩虹數字或馬雅曆如何揭示「你的慣性盲點」——讓讀者有好奇心點擊了解。
-        <br><br><span class="suggestion-tag">問答型</span><span class="suggestion-tag gold">高互動格式</span><span class="suggestion-tag">清醒/盲點</span>
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 2: 事業卡關 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-1">
+  <div class="page-header">
+    <div class="page-emoji">🚧</div>
+    <div>
+      <div class="page-kw-title">事業卡關</div>
+      <div class="page-kw-sub">低谷期對身心靈工具接受度高 · 渴望知道「為什麼我卡在這裡」<br>身心靈 Podcast、占卜、使命探索高度相關</div>
+      <div class="page-tags">
+        <span class="tag tag-pain">低谷期</span>
+        <span class="tag tag-seek">身心靈轉變</span>
+        <span class="tag tag-tool">馬雅曆</span>
+        <span class="tag tag-soul">盧恩占卜</span>
       </div>
     </div>
   </div>
 
-  <!-- Post 2 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@chapeiyi（藝術療癒）</div>
-        <div class="post-date">📅 2026-04-22</div>
-        <div><a href="https://www.threads.com/@chapeiyi" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">221</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">53</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-7">請 Threads 演算法幫我把這週六的戲劇療癒工作坊推薦給這群人：<br>1. 對心理學、藝術療癒有興趣的人<br>2. 自我覺察敏銳、持續了解自己的人<br>3. 喜歡創作故事、角色、劇情的人<br>4. 喜歡深度聊天、不愛表面社交的人<br>5. 有自己觀點、也能尊重不同觀點的人<br>6. 曾經是討好型人格，如今活出自我的人<br>7. 喜歡探索自己，每天努力活在當下的人<br><br>我想知道這個地球有沒有跟我一樣敏感細膩的人類 🤭</div>
-      <button class="expand-btn" onclick="toggleText('text-7',this)">▼ 展開全文</button>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍</div>
-      <div class="comment-item"><div class="comment-user">高共鳴點</div><div class="comment-text">「討好型人格 → 活出自我」這個轉化路徑引起大量共鳴，「這描述的就是我！」「原來這樣的工作坊存在！」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        仿此格式：「請演算法幫我找到這樣的人：曾是討好型人格、想用馬雅曆找回自己的人…」，結合課程推廣，用「覺察敏銳的靈魂」來描述TA，讓對的人主動找上門。
-        <br><br><span class="suggestion-tag">演算法召喚格式</span><span class="suggestion-tag">討好型人格</span><span class="suggestion-tag gold">課程推廣</span>
-      </div>
+  <div class="insight-strip">
+    <div class="insight-strip-title">💡 Tilandky 內容切入角度</div>
+    <div class="insight-strip-text">
+      搜尋此關鍵字的貼文互動中，<strong>Podcast 協作</strong>與<strong>身心靈主題</strong>出現同時，
+      顯示受眾已開始主動尋找「事業卡關的精神出口」。
+      Tilandky 可以用<strong>馬雅曆解析「你的使命時間軸」</strong>，以及<strong>盧恩占卜</strong>揭示「現在卡關的深層訊息」切入。
     </div>
   </div>
 
-  <!-- Post 3 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@drjywang</div>
-        <div class="post-date">📅 2026-05-02</div>
-        <div><a href="https://www.threads.com/@drjywang" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">197</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">25</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-8">低認知（自我覺察力低）的人如果加上自負（自尊心太高），通常就會自取滅亡。<br>因為他們會連別人是善意還是惡意都分不出來。<br>你真心提醒他、給他建議，他覺得你在打壓他、扯他後腿。<br>但那些只會附和他、煽動他的人，他卻當成知己、當成支持。<br><br>當一個人「不知道自己不知道」，又「很怕自己被否定」的時候，會發生什麼事？<br>會把逆耳忠言，都當成敵意，錯把口蜜腹劍，都當成真心。<br><br>我現在看懂，那是他們靈魂的功課。</div>
-      <button class="expand-btn" onclick="toggleText('text-8',this)">▼ 展開全文</button>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍</div>
-      <div class="comment-item"><div class="comment-user">主流留言方向</div><div class="comment-text">「身邊就有這種人，說得太準了」「這種人說什麼都沒用，只能遠離」「覺察力真的是一切的基礎」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        從「覺察力是一切改變的起點」角度出發，連結彩虹數字如何揭示一個人的「情緒體盲點」——為什麼你的反應模式是這樣，以及如何透過了解自己的數字能量改寫。
-        <br><br><span class="suggestion-tag">洞察型貼文</span><span class="suggestion-tag">情緒盲點</span><span class="suggestion-tag gold">彩虹數字連結</span>
-      </div>
-    </div>
-  </div>
+  <div class="section-divider">📌 精選貼文 #1</div>
 
-  <!-- Post 4 -->
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@bibiegg2002（越在意什麼，越容易強調什麼）</div>
-        <div class="post-date">📅 2026-05-19（3天前）</div>
-        <div><a href="https://www.threads.com/@bibiegg2002/post/DYf6HR6k2ZA" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">148</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">26</span></span>
-        <span class="metric"><span class="metric-icon">👁</span><span class="metric-views">5,152</span></span>
-      </div>
+      <span class="post-num">熱門貼文 #1</span>
+      <a class="threads-link" href="https://www.threads.com/@178yen/post/DYG9fa4icZv" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-9">Hi～ 是否很多人都不知道，其實自己越在意什麼，越會去強調什麼？<br>我對前夫他總強調對錢不在意，說他自己非常大方。跟我的日常生活，直到離婚前開口閉口都是錢。<br>就像很多人會對外宣稱，他人緣很好，實際上他的內心很孤獨。<br>大部分的人往往可以把別人的缺點看得一清二楚，但卻不敢面對、深挖、覺察自己。<br>當發現自己又在刻意強調某件事時，問自己：我真正恐懼或在乎的是什麼？</div>
-      <button class="expand-btn" onclick="toggleText('text-9',this)">▼ 展開全文</button>
+    <div class="post-author">作者：<strong>@178yen</strong></div>
+    <div class="post-content">
+      最近想找幾位女生一起錄 Podcast，聊事業卡關、身心靈轉變、占卜人性觀察。<br>
+      有興趣的留言或私訊，一起聊聊看看 ✨
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">❤️</span> 118 讚</span>
+      <span class="engage-item"><span class="ei">💬</span> 多則回應</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言</div>
-      <div class="comment-item"><div class="comment-user">@lin797616</div><div class="comment-text">我最在意的是被誤會，以前還沒覺得在意，可是現在卻覺得在意</div></div>
-      <div class="comment-item"><div class="comment-user">@itei7385</div><div class="comment-text">這往往是最困難的，因為很難面對自己的內心，通常只有面臨重大事件才會摒除現狀來面對自己內心。</div></div>
-      <div class="comment-item"><div class="comment-user">@chiharu_tsuki</div><div class="comment-text">我常常會觀察這件事，透過他們嘴裡說的宣稱，來好好地「認識」他們的特質🤣</div></div>
-      <div class="comment-item"><div class="comment-user">@mia_life666</div><div class="comment-text">非常認同！！老師教聽話看事情不要看表面聽字面意思，很多時候是在包裝自己的另一面</div></div>
-      <div class="comment-item"><div class="comment-user">@docheng8</div><div class="comment-text">"No one can make you feel inferior without your consent." 「沒有你的同意，誰也不能讓你自卑。」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        「我的數字揭示了我最深的恐懼」——用彩虹數字或馬雅曆揭示「你一直在強調的，正是你最需要療癒的」，帶入真實案例，引導讀者好奇自己的數字/圖騰。
-        <br><br><span class="suggestion-tag">心理洞察</span><div class="suggestion-tag gold">個案故事型</div><span class="suggestion-tag">彩虹數字</span>
+      <div class="comments-title">💬 Top 5 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">@ivy0929ivy0929</div>
+          <div class="comment-text">🙋‍♀️🙋‍♀️🙋‍♀️🙋‍♀️ 我！</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">@_the_realphoto_</div>
+          <div class="comment-text">🦶（腳）一直很想錄身心靈主題！</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">@ladyxian0458</div>
+          <div class="comment-text">🦶（這個太有創意了啦 🤣</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">4</div>
+        <div class="comment-body">
+          <div class="comment-user">@miya_miya1102</div>
+          <div class="comment-text">🙋‍♀️ 舉手！很有興趣！</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">5</div>
+        <div class="comment-body">
+          <div class="comment-user">@lovemyself6666</div>
+          <div class="comment-text">🙋‍♀️ 我我我！事業卡關這個主題太貼近了。</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ 情緒療癒 TAB ═══════════ -->
-<div id="tab-情緒療癒" class="tab-content">
-  <div class="page-title">情緒療癒</div>
-  <div class="page-subtitle">共 4 篇精選貼文 · 含本週 Threads 最高讚貼文（1,851 讚）</div>
-
-  <!-- Post 1 - VIRAL -->
-  <div class="post-card" style="border: 2px solid var(--gold);">
-    <div class="post-header" style="background: #fff8e8;">
-      <div>
-        <div class="post-author">🔥 @maxfjtarot（MAX范姜｜催眠師 × AI 工程師）</div>
-        <div class="post-date">📅 2026-04-07</div>
-        <div><a href="https://www.threads.com/@maxfjtarot" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes" style="font-size:18px">1,851</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">148</span></span>
-        <span class="metric"><span class="metric-icon">🔁</span><span>56</span></span>
-        <span class="metric"><span class="metric-icon">📤</span><span>183</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-10">她花了六萬上三天心靈課。<br>出來的時候抱著大樹痛哭，說自己終於跟宇宙和解了<br><br>隔天進工作室，主管一句重話，她躲在廁所恐慌發作。<br><br>沒有真正被接住、沒有結構性的改變<br>你以為花錢買的是深度療癒<br>其實只是經歷了一場集體的強制情緒崩潰</div>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍（148則）</div>
-      <div class="comment-item"><div class="comment-user">最高頻回應</div><div class="comment-text">「天啊這就是我！上完課回來什麼都沒變」「這說的太準了，一直花錢但狀態沒有真正改變」</div></div>
-      <div class="comment-item"><div class="comment-user">第二大共鳴</div><div class="comment-text">「結構性改變這個詞太關鍵了」「情緒崩潰和情緒療癒是兩回事」</div></div>
-      <div class="comment-item"><div class="comment-user">質疑/反思方向</div><div class="comment-text">「那怎樣才算真正的療癒？」「有沒有推薦真的有效的方式？」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">🔥 Tilandky 爆文機會</div>
-      <div class="suggestion-content">
-        這是最值得借勢的爆文！寫「我也見過這樣的個案——花了五萬上課，回來第一天就崩潰」，然後說明希塔療癒的「結構性改寫信念」是什麼、和情緒宣洩有什麼不同。最後提供 1:1 個案諮詢入口。此格式有高傳播力，搭配「六萬課程」的話題性，很可能成為爆文。
-        <br><br><span class="suggestion-tag gold">最高優先度</span><span class="suggestion-tag">借勢爆文</span><span class="suggestion-tag">希塔療癒個案</span><span class="suggestion-tag">結構性改變</span>
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 3: 活出自己 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-2">
+  <div class="page-header">
+    <div class="page-emoji">🌸</div>
+    <div>
+      <div class="page-kw-title">活出自己</div>
+      <div class="page-kw-sub">不想配合世界、想找到自己的定位 · 藍海關鍵字<br>人類圖、馬雅曆讓她們找到「天生特質的合理解釋」</div>
+      <div class="page-tags">
+        <span class="tag tag-seek">人生轉型</span>
+        <span class="tag tag-seek">人類圖</span>
+        <span class="tag tag-tool">馬雅曆圖騰</span>
+        <span class="tag tag-soul">彩虹數字</span>
       </div>
     </div>
   </div>
 
-  <!-- Post 2 -->
+  <div class="insight-strip">
+    <div class="insight-strip-title">💡 Tilandky 內容切入角度</div>
+    <div class="insight-strip-text">
+      「活出自己」的留言群在<strong>探討人類圖、自我覺察</strong>，互動質量高但量少（藍海）。
+      Tilandky 可以<strong>馬雅曆圖騰</strong>做為「你天生活出自己的密碼」，搭配<strong>彩虹數字</strong>展示「你的核心生命主題」，
+      以「<strong>你不是格格不入，你只是找到了自己的語言</strong>」作為鉤子句。
+    </div>
+  </div>
+
+  <div class="section-divider">📌 精選貼文 #1</div>
+
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@crystalinsight2024</div>
-        <div class="post-date">📅 2026-05-19（3天前）</div>
-        <div><a href="https://www.threads.com/@crystalinsight2024" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">302</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">92</span></span>
-      </div>
+      <span class="post-num">熱門貼文 #1</span>
+      <a class="threads-link" href="https://www.threads.com/@godadagogogo/post/DV6ip2YD8Jr" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-11">請神聖的Threads 流量 幫我找到同類型的人 🫶🏻<br>1. 喜歡逛礦石、水晶的人<br>2. 喜歡有質感的小眾飾品<br>3. 對能量、頻率、吸引力法則有興趣<br>4. 喜歡冥想、靜坐、點香氛放鬆<br>5. 喜歡心理學、情緒療癒、自我成長等內容<br><br>有符合的話，在留言區讓我知道！</div>
+    <div class="post-author">作者：<strong>@godadagogogo</strong></div>
+    <div class="post-content">
+      推薦可以先看「北歐時間」，再看「50歲後我想這樣過」。<br><br>
+      人生後半的劇本，從「了解自己」開始。12條人生清單：<br>
+      1. 把人生當成「專案」來做，會變的更有趣<br>
+      2. 意識到自己累積的「內在潛藏資源」：找到只有你才能做的事<br>
+      3. 有意識的拓展自己的活動範圍：移動的距離決定了感動的深度<br>
+      4. 和科技成為好朋友：把不必親自做的工作交給 AI 處理…（共12條）
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">❤️</span> <span class="engage-red">447</span> 讚</span>
+      <span class="engage-item"><span class="ei">💬</span> 11 則留言</span>
+      <span class="engage-item"><span class="ei">🔁</span> 30 轉發</span>
+      <span class="engage-item"><span class="ei">💬</span> 174 引用</span>
+      <span class="engage-item"><span class="ei">👁️</span> 1萬 瀏覽</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍（92則）</div>
-      <div class="comment-item"><div class="comment-user">主流留言</div><div class="comment-text">大量「全部都有！」「5項全符合！」「找到同類了」，互相追蹤</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        直接在此文下留言互動，或仿格式發「能量同類召喚貼文」，加入馬雅曆 / 彩虹數字 / 靈魂藍圖等關鍵詞，吸引高度重疊的 TA。
-        <br><br><span class="suggestion-tag">能量頻率</span><span class="suggestion-tag">召喚同類</span><span class="suggestion-tag gold">互動型</span>
+      <div class="comments-title">💬 Top 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">@silvernomadlab（60+ 退休遊牧）</div>
+          <div class="comment-text">60+ 退休姨母看到第 1 點「把人生當專案」，我笑了。以前在 APAC 管了 30 年銷售，專案做得夠多了。現在 60 歲遊牧，我更傾向「去專案化」。第 3 點「拓展活動範圍」，直接出國短居；第 5 點「輸出分享」，開始寫銀髮遊牧…每一點都有共鳴！</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Post 3 -->
+  <div class="section-divider">📌 精選貼文 #2</div>
+
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@ariel.himalaya（焦慮 憂鬱）</div>
-        <div class="post-date">📅 2026-05-22（5小時前）</div>
-        <div><a href="https://www.threads.com/@ariel.himalaya" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">7+</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">進行中</span></span>
-      </div>
+      <span class="post-num">熱門貼文 #2</span>
+      <a class="threads-link" href="https://www.threads.com/@lai__810/post/DYUS6LYj5fR" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-12">看到脆友上詢問有沒有人 焦慮 憂鬱 就會想乾嘔，我以前有一段時間，情緒一上來就會想吐，是真的生理反應⋯⋯<br>但現在回頭看，會發現人真的比自己想像中還厲害。現在的我，還是好好活著，曬太陽、旅行、去愛這個世界，也成為了療癒師，開始陪伴別人走過低潮。<br>有時候真的會覺得：那些以為撐不過去的時刻，最後也都過去了。自己其實蠻厲害的 ✌🏻</div>
+    <div class="post-author">作者：<strong>@lai__810</strong></div>
+    <div class="post-content">
+      以前總覺得自己跟這個世界有點格格不入，找不到一個可以真正理解自己的地方。<br>
+      直到我遇見人類圖，看見自己是「4/1 投射者」…<br>
+      不變，不是固執，而是與生俱來的力量。
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">❤️</span> 21 讚</span>
+      <span class="engage-item"><span class="ei">👁️</span> 286 瀏覽</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍</div>
-      <div class="comment-item"><div class="comment-user">共鳴方向</div><div class="comment-text">「謝謝你的分享，我現在也在這個階段」「能看到走過來的人很有力量」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        分享「我也走過那段不知道怎麼繼續的時光」個人故事，說明希塔療癒如何幫助自己面對情緒底層的信念，邀請有共鳴的人諮詢 1:1 個案。
-        <br><br><span class="suggestion-tag">個人故事</span><span class="suggestion-tag">希塔個案</span><span class="suggestion-tag gold">療癒師視角</span>
+      <div class="comments-title">💬 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">@elvis_liang_tw</div>
+          <div class="comment-text">有點好奇我能知道你的生日嗎？想幫你看看。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">@lai__810（作者回覆）</div>
+          <div class="comment-text">私你好了 🙂</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">@elvis_liang_tw</div>
+          <div class="comment-text">我已經私訊回覆解析嘍！感謝妳的分享 💫</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ 馬雅曆 TAB ═══════════ -->
-<div id="tab-馬雅曆" class="tab-content">
-  <div class="page-title">馬雅曆 / 十三月亮曆</div>
-  <div class="page-subtitle">共 5 篇精選貼文</div>
-
-  <!-- Post 1 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@vitalovelife.vl</div>
-        <div class="post-date">📅 2026-05-13</div>
-        <div><a href="https://www.threads.com/@vitalovelife.vl/post/DYRN4M8gDyA" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">215</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">356</span></span>
-        <span class="metric"><span class="metric-icon">👁</span><span class="metric-views">4,876</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-13">聽過黃金未來嗎？在2022時遇到馬雅曆，看了地球編年史，藝術、教育一直有聲音在呼喚我。在我開兒童畫室的時候，被兒童療癒了。我知道他們好喜歡被激發可能性的互動，他們真實的會給你愛的抱抱。<br><br>來吧。歡迎朋友們互動，來抽抽 黃金未來卡，關於黃金未來卡要給你的指引是什麼？<br>歡迎新朋友追蹤，加一，老朋友直接加一，喊了在慢慢回應</div>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 Top 5 熱門留言</div>
-      <div class="comment-item"><div class="comment-user">@ya.chen.55555</div><div class="comment-text">+1（回應：鼓勵你多去旅行，在旅行中自然會讓滋養你，蛻變，還能讓有不同的視角看待事情）</div></div>
-      <div class="comment-item"><div class="comment-user">@_the_realphoto_</div><div class="comment-text">天啊！請問你的兒童畫室在哪裡！！</div></div>
-      <div class="comment-item"><div class="comment-user">@zhengxiian_</div><div class="comment-text">+1～</div></div>
-      <div class="comment-item"><div class="comment-user">@liuyuuki</div><div class="comment-text">+1</div></div>
-      <div class="comment-item"><div class="comment-user">@xu.lingrong</div><div class="comment-text">超準的，我最近也一直在想這件事，謝謝您</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        「牌卡抽牌 + 留言互動」是馬雅曆版本裡最能帶動留言量的格式（本篇 356 則！）。Tilandky 可仿發「留下你的生日，我用馬雅圖騰告訴你今年的能量主題」，快速累積互動和潛在學員名單。
-        <br><br><span class="suggestion-tag gold">最高互動格式</span><span class="suggestion-tag">馬雅圖騰解盤</span><span class="suggestion-tag">公益互動</span>
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 4: 關係困境 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-3">
+  <div class="page-header">
+    <div class="page-emoji">💔</div>
+    <div>
+      <div class="page-kw-title">關係困境</div>
+      <div class="page-kw-sub">兩性關係框架、吸引力法則、感情創傷 · 互動量大<br>受眾渴望理解「為什麼我在關係中一直重蹈覆轍」</div>
+      <div class="page-tags">
+        <span class="tag tag-pain">感情創傷</span>
+        <span class="tag tag-pain">兩性框架</span>
+        <span class="tag tag-seek">關係療癒</span>
+        <span class="tag tag-tool">希塔療癒</span>
       </div>
     </div>
   </div>
 
-  <!-- Post 2 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@tera.happiness（馬雅曆解讀師 + 生活教練）</div>
-        <div class="post-date">📅 2025-12-05</div>
-        <div><a href="https://www.threads.com/@tera.happiness/post/DR4bIFnD9UO" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">276</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">65</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-14">最近帳號多了很多新朋友，很開心與你相遇～ 我是Tera，過去，我是資優班國文老師；現在，我是馬雅曆解讀師，也是生活教練。希望陪伴大家與高敏共存、擺脫內耗、增進信心、提升日常幸福感！<br><br>透過馬雅13月亮曆陪伴自己和家人度過生命的無助與低潮，現在也是藉以助人與帶來影響力的工具。目前開設七屆「信念改寫陪跑營」，幫助100+個案找回做自己、不討好的勇氣。</div>
-      <button class="expand-btn" onclick="toggleText('text-14',this)">▼ 展開全文</button>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍</div>
-      <div class="comment-item"><div class="comment-user">主流留言</div><div class="comment-text">「從老師到馬雅曆老師的轉型故事」引起大量共鳴，特別是有類似背景的人（教育工作者轉型）</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        發「自我介紹貼文」更新版：強調馬雅之鏡品牌故事，為什麼選擇馬雅曆 + 彩虹數字作為陪伴工具，以及幫助過的個案類型。「我是誰 × 我能幫你什麼」格式，新粉必看。
-        <br><br><span class="suggestion-tag gold">品牌故事</span><span class="suggestion-tag">自我介紹型</span><span class="suggestion-tag">轉型經歷</span>
-      </div>
+  <div class="insight-strip">
+    <div class="insight-strip-title">💡 Tilandky 內容切入角度</div>
+    <div class="insight-strip-text">
+      留言中「紅藥丸、黑藥丸」的討論說明受眾在<strong>用框架理解關係</strong>。
+      Tilandky 可以提供更深的視角：<strong>「吸引力法則在關係中的運作」</strong>——
+      你吸引到的人，反映的是你的內在信念。用<strong>希塔療癒清理關係信念</strong>，
+      用<strong>彩虹數字</strong>解析「你在關係中的核心課題」切入課程。
     </div>
   </div>
 
-  <!-- Post 3 -->
+  <div class="section-divider">📌 精選貼文 #1</div>
+
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@pinkkaren_studio（資遣系列）</div>
-        <div class="post-date">📅 2026-04-14</div>
-        <div><a href="https://www.threads.com/@pinkkaren_studio/post/DYobAoHifz9" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">89</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">40+</span></span>
-      </div>
+      <span class="post-num">熱門貼文 #1</span>
+      <a class="threads-link" href="https://www.threads.com/@man.reset365/post/C-7TPU6vuyO" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-15">後來我沒有再硬撐，而是開始學美學、保養，也接觸身心靈、研究馬雅曆。我才懂——不是我不夠好，是我一直用錯方式在活😳<br>理化碩士的我以前只相信邏輯，現在更懂「每個人都有自己的天賦節奏」<br><br>如果你現在也在懷疑自己，留言「馬雅曆」，跟我說你卡在哪，我們可以聊聊</div>
+    <div class="post-author">作者：<strong>@man.reset365</strong></div>
+    <div class="post-content">
+      有陣子，我很迷紅藥丸。<br>
+      把那套兩性相處框架照單全收，學習如何保持主導、保持神秘感、
+      讓自己看起來高價值⋯但後來感情急轉直下，才開始反思這段心路歷程。
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">❤️</span> 2,152+ 讚</span>
+      <span class="engage-item"><span class="ei">💬</span> 多則深度留言</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍</div>
-      <div class="comment-item"><div class="comment-user">共鳴方向</div><div class="comment-text">「資遣/裁員後用馬雅曆找到方向」的故事讓人大量留言「我也是」「分享你的馬雅曆經歷」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        發「馬雅曆讓我看到一件事：我以前用錯方法在活」個人故事，說明遇到馬雅曆之前 vs 之後的具體改變，呼籲留言互動，帶動諮詢。
-        <br><br><span class="suggestion-tag">職場困境</span><span class="suggestion-tag">轉折故事</span><span class="suggestion-tag gold">前後對比</span>
+      <div class="comments-title">💬 Top 5 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">急轉直下可能是你 Alpha 面具掉下來了。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">你點到很重要的點，但結論還是要繼續假裝嗎？</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">沒有正確的師傅去學紅藥丸，說實話你已經學到黑藥丸了。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">4</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">掌握兩性互動大方向。捉大放小⋯大事引領女生方向讓女生崇拜，小事給女生決定有安全感。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">5</div>
+        <div class="comment-body">
+          <div class="comment-user">熱門留言</div>
+          <div class="comment-text">一直聽到什麼 xx 藥丸的，我就沒聽過柯震東、許光漢學什麼藥丸⋯自然就是最好的。</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ 彩虹數字 TAB ═══════════ -->
-<div id="tab-彩虹數字" class="tab-content">
-  <div class="page-title">彩虹數字</div>
-  <div class="page-subtitle">共 4 篇精選貼文</div>
-
-  <!-- Post 1 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@eric.hypnotist（樹根樹洞 TheRootsHollow）</div>
-        <div class="post-date">📅 2026-05-02（紐約）</div>
-        <div><a href="https://www.threads.com/@eric.hypnotist" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">67</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">111</span></span>
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 5: 找不到方向 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-4">
+  <div class="page-header">
+    <div class="page-emoji">🧭</div>
+    <div>
+      <div class="page-kw-title">找不到方向</div>
+      <div class="page-kw-sub">20-30 歲迷茫族群 · 對人生選擇感到焦慮茫然<br>渴望有人告訴他們「你應該往哪走」</div>
+      <div class="page-tags">
+        <span class="tag tag-pain">人生迷茫</span>
+        <span class="tag tag-pain">22-30歲</span>
+        <span class="tag tag-seek">使命探索</span>
+        <span class="tag tag-tool">馬雅曆</span>
       </div>
     </div>
-    <div class="post-body">
-      <div class="post-text" id="text-16">彩虹數字Rainbow Numerology Vol 1.1<br>你的出生日期，其實隱藏了很多你不知道的事。<br>你或許聽過生命靈數，知道自己是「幾號人」。但同一組生日，陽曆算出來的數字和陰曆算出來的數字，其實有各自的意涵——一個代表你這一生最想成就的事，一個代表你將會如何去感受這段歷程。<br><br>想知道你的陽曆和陰曆主命數各是什麼？留言告訴我你的生日，我幫你看看。</div>
-      <button class="expand-btn" onclick="toggleText('text-16',this)">▼ 展開全文</button>
+  </div>
+
+  <div class="insight-strip">
+    <div class="insight-strip-title">💡 Tilandky 內容切入角度</div>
+    <div class="insight-strip-text">
+      「找不到方向」的受眾互動量相對低，但代表一個<strong>需求明確的藍海</strong>——
+      他們不是缺乏努力，而是缺乏<strong>方向感的工具</strong>。
+      Tilandky 的<strong>馬雅曆解析「你的人生使命波符」</strong>直接回應「我該往哪走」這個問題，
+      搭配盧恩占卜做「當下指引」，是最強切入點。
+    </div>
+  </div>
+
+  <div class="section-divider">📌 精選貼文 #1</div>
+
+  <div class="post-card">
+    <div class="post-header">
+      <span class="post-num">熱門貼文 #1</span>
+      <a class="threads-link" href="https://www.threads.com/@pigy724/post/DYhBB1mmQb9" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
+    </div>
+    <div class="post-author">作者：<strong>@pigy724</strong></div>
+    <div class="post-content">
+      🫠 22 歲還找不到工作和人生方向正常吧！<br>
+      真的還沒有想要升遷跟發展，今天我拒絕了，我沒有後悔，
+      內耗了很久，但我想那不會是我想要的人生。
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">❤️</span> 10 讚</span>
+      <span class="engage-item"><span class="ei">👁️</span> 938 瀏覽</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍（111則）</div>
-      <div class="comment-item"><div class="comment-user">主流留言</div><div class="comment-text">大量留下生日數字（1990/05/23 等），期待解盤——超高互動的鉤子型格式</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        「留下你的生日，我告訴你彩虹數字中你的天賦主題」——用公益解盤格式引流，收集潛在學員生日資料，後續邀請上課。Tilandky 有完整彩虹數字教材，這是最直接的課前試探格式。
-        <br><br><span class="suggestion-tag gold">公益解盤引流</span><span class="suggestion-tag">彩虹數字</span><span class="suggestion-tag">留言互動</span>
+      <div class="comments-title">💬 留言（共 3 則）</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">@ashlyn46248</div>
+          <div class="comment-text">來私訊我 💌</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Post 2 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@yau96（光蘊療心學院）</div>
-        <div class="post-date">📅 2025-10-26</div>
-        <div><a href="https://www.threads.com/@yau96" target="_blank" class="post-link">🔗 查看原文</a></div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">@sundan0927</div>
+          <div class="comment-text">陌生人加油！！🙏</div>
+        </div>
       </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">6</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">少</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-17">今天很榮幸受邀進行「彩虹數字 × 馬雅曆法」的分享🫶🫶🫶 一樣用著最貼近生活、最白話的方式，帶大家看見自己的 #數字生命藍圖 與 #馬雅生命劇本，不是艱深的大道理，而是能真正落地在生活中使用的智慧。<br><br>我始終認為——#認識自己 是人生中最重要的功課。</div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        「彩虹數字 × 馬雅曆」雙工具組合是 Tilandky 的核心差異化。發「為什麼我同時用這兩把鑰匙」的說明貼文，讓受眾了解兩者的互補性，建立專業識別。
-        <br><br><span class="suggestion-tag">雙工具差異化</span><span class="suggestion-tag gold">品牌定位</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Post 3 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@zhoushaozu（身心靈）</div>
-        <div class="post-date">📅 2025-12-30</div>
-        <div><a href="https://www.threads.com/@zhoushaozu" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">18</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">18</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-18">很多人看到我掛著「彩虹數字諮詢師」🌈 第一反應常問我：「你是在做 Gay/同志諮詢嗎？」<br>雖然愛不分性別，但我這裡說的彩虹，高度可能要再往上移一點點。（上帝：是在叫我嗎？☁️）<br><br>🔢 什麼是彩虹數字？這是一門來自「七次元彩虹國度」的學問。透過數字作為橋樑，解讀你靈魂與上天訂製的「生命檔案」。<br><br>想知道你此生的「主要數字」嗎？在下方留言你的「出生年月日（國曆）」</div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        用幽默方式破解「彩虹數字是什麼」的認知門檻，仿發「第一次聽到彩虹數字，以為是⋯⋯」的幽默開頭貼文，降低受眾疑惑，讓更多人好奇點進來了解。
-        <br><br><span class="suggestion-tag">幽默破冰</span><span class="suggestion-tag">彩虹數字科普</span><span class="suggestion-tag gold">降低門檻</span>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">@victorx0719</div>
+          <div class="comment-text">科技潔蟎師（幽默方向建議）</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ 人生定位 TAB ═══════════ -->
-<div id="tab-人生定位" class="tab-content">
-  <div class="page-title">人生定位</div>
-  <div class="page-subtitle">共 4 篇精選貼文</div>
-
-  <!-- Post 1 - TOP -->
-  <div class="post-card" style="border: 2px solid var(--sage);">
-    <div class="post-header" style="background: #f2f4f0;">
-      <div>
-        <div class="post-author">🌿 @turtle.3007350</div>
-        <div class="post-date">📅 2026-04-09</div>
-        <div><a href="https://www.threads.com/@turtle.3007350" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes" style="font-size:18px">373</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">100</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-19"><strong>32歲了<br>我找不到我人生中的定位</strong></div>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍（100則）</div>
-      <div class="comment-item"><div class="comment-user">壓倒性共鳴</div><div class="comment-text">「35歲了也一樣」「我40了還是一樣」「你不孤單，很多人都這樣」「定位這件事根本就沒有標準答案」</div></div>
-      <div class="comment-item"><div class="comment-user">工具推薦方向</div><div class="comment-text">「試試人類圖/八字/馬雅曆，幫我找到不少方向」</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">🔥 Tilandky 爆文機會</div>
-      <div class="suggestion-content">
-        373 讚的核心！這種極簡的「我找不到定位」只有一句話卻引發大量共鳴，說明 Tilandky 的 TA 大量存在這個困境。<br>對應貼文：「32歲，還找不到定位？——馬雅曆告訴我，你本來就不是被設計來走單一路線的」，直接接住這批讀者，引導進課程。
-        <br><br><span class="suggestion-tag gold">最高優先</span><span class="suggestion-tag">接住迷茫族群</span><span class="suggestion-tag">馬雅曆天賦方向</span>
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 6: 自我價值 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-5">
+  <div class="page-header">
+    <div class="page-emoji">💎</div>
+    <div>
+      <div class="page-kw-title">自我價值</div>
+      <div class="page-kw-sub">爆文潛力最高（8,778讚）· 受眾渴望從「我不行」→「我可以」<br>「找到人生意義、奉獻、活著有價值」是核心渴望</div>
+      <div class="page-tags">
+        <span class="tag tag-pain">存在感缺失</span>
+        <span class="tag tag-pain">自我懷疑</span>
+        <span class="tag tag-seek">人生意義</span>
+        <span class="tag tag-tool">希塔療癒</span>
+        <span class="tag tag-soul">彩虹數字</span>
       </div>
     </div>
   </div>
 
-  <!-- Post 2 -->
-  <div class="post-card">
-    <div class="post-header">
-      <div>
-        <div class="post-author">@mapdass（不務正業）</div>
-        <div class="post-date">📅 2026-03-11</div>
-        <div><a href="https://www.threads.com/@mapdass" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">272</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">36</span></span>
-      </div>
-    </div>
-    <div class="post-body">
-      <div class="post-text" id="text-20">我越來越覺得，人生其實沒有什麼所謂的正業。真正的人生正業，是照顧好自己，讓自己活得快樂、活得有意義。<br>很像 Ikigai 提到的：你享受什麼、你擅長什麼、世界需要什麼，以及什麼能讓你持續創造價值。<br>職業只是形式，定位才是核心。比起急著證明自己屬於哪一行，也許更重要的是：你想成為一個什麼樣的人。<br>你本來就有無限多種可能性。</div>
-    </div>
-    <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍</div>
-      <div class="comment-item"><div class="comment-user">高共鳴</div><div class="comment-text">「職業只是形式，定位才是核心」被大量引用，引發關於「斜槓、多元發展」的討論</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        「你的馬雅圖騰就是你的人生 Ikigai」——把馬雅曆和 Ikigai 概念結合，說明如何用馬雅曆找出天賦 × 能量節奏 × 生命使命的交集，定位人生方向。
-        <br><br><span class="suggestion-tag">Ikigai概念</span><span class="suggestion-tag">職涯轉型</span><span class="suggestion-tag gold">天賦定位</span>
-      </div>
+  <div class="insight-strip">
+    <div class="insight-strip-title">💡 Tilandky 內容切入角度</div>
+    <div class="insight-strip-text">
+      此貼文（374讚、355留言）討論「29歲女性想出家」，本質是<strong>自我價值的極端追求</strong>——
+      她不是想逃避，而是渴望「我的存在有意義」。
+      Tilandky 可以用<strong>希塔療癒如何清理自我價值信念</strong>，
+      再用<strong>彩虹數字</strong>展示「你天生的核心價值就在這裡」，
+      回應「你不需要出家，你的天賦本身就是你的奉獻」這個訊息。
+      此關鍵字最適合直接連結課程。
     </div>
   </div>
 
-  <!-- Post 3 -->
+  <div class="section-divider">📌 精選貼文 #1</div>
+
   <div class="post-card">
     <div class="post-header">
-      <div>
-        <div class="post-author">@chrisweiche1006（公益符文解盤）</div>
-        <div class="post-date">📅 2025-11-29</div>
-        <div><a href="https://www.threads.com/@chrisweiche1006" target="_blank" class="post-link">🔗 查看原文</a></div>
-      </div>
-      <div class="post-meta">
-        <span class="metric"><span class="metric-icon">❤️</span><span class="metric-likes">124</span></span>
-        <span class="metric"><span class="metric-icon">💬</span><span class="metric-comments">142</span></span>
-      </div>
+      <span class="post-num">最高互動貼文</span>
+      <a class="threads-link" href="https://www.threads.com/@sunset.nirvana/post/DYbhoRREcTK" target="_blank">
+        <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"><path d="M141.537 88.988c-.88-.415-1.77-.822-2.664-1.21-1.57-21.409-12.72-33.684-32.172-33.808C93.73 53.902 83.98 59.41 78.07 68.867l11.73 8.05c4.078-6.19 10.48-7.51 16.478-7.51 6.374 0 11.014 1.89 13.792 5.617 2.156 2.85 3.597 6.8 4.3 11.81-5.368-.913-11.194-1.19-17.457-.84-17.594 1.013-28.9 11.278-28.2 25.518.36 7.23 3.96 13.46 10.14 17.53 5.24 3.45 11.988 5.14 19.02 4.75 9.278-.514 16.552-4.042 21.617-10.484 3.827-4.836 6.257-11.1 7.374-19.014 4.412 2.665 7.69 6.17 9.587 10.41 3.26 7.22 3.45 19.1-6.76 29.18-8.94 8.83-19.684 12.65-35.942 12.766-18.03-.13-31.67-5.92-40.52-17.22-8.27-10.58-12.55-25.94-12.73-45.67.18-19.73 4.46-35.09 12.73-45.67 8.85-11.3 22.49-17.09 40.52-17.22 18.16.13 32.04 5.95 41.27 17.29 4.53 5.59 7.94 12.6 10.21 20.79l13.63-3.65c-2.79-10.3-7.23-19.16-13.32-26.52C135.28 9.01 116.96 1.86 96.12 1.73h-.13C75.33 1.86 57.26 9.05 44.8 22.09 33.45 34 27.5 51.13 27.28 72.93v.13c.22 21.8 6.17 38.94 17.52 50.84 12.46 13.04 30.53 20.23 51.58 20.36h.13c18.76-.12 31.97-5.04 42.81-15.92C152.38 115.32 152 96.42 141.537 88.988z"/></svg>
+        在 Threads 查看原文
+      </a>
     </div>
-    <div class="post-body">
-      <div class="post-text">我想做一件有意義的事。這次我想開放 100 位脆友的公益解盤名額。我會用 符文圖騰 替你看見你天賦裡真正藏著的方向、力量與人生定位。如果你正迷惘、想重新認識自己、或是想知道你到底適合什麼，你都可以來報名。<br>只到 100 位額滿 為止。純公益，不收費。想被我看見天賦的，私訊就可以。</div>
+    <div class="post-author">作者：<strong>@sunset.nirvana</strong></div>
+    <div class="post-content">
+      如果29歲的女生想出家，可以去哪里詢問。<br><br>
+      一直以來的工作都只是為了生存而已。為了生存，我一直在強迫自己做不喜歡的工作，
+      甚至跑到其他國家長居，我做了各式各樣的工作。<br><br>
+      提了離職一陣子之後才想清楚，也許出家的生活，才是我想要的，
+      如果都是工作，出家把自己奉獻給大眾，是展現我<strong>人生價值</strong>的最好的歸屬。<br><br>
+      吃素之後我變得很開心，甚至第一次覺得這樣活著有一點問心無愧，真好。
+      追劇、滑手機，反而讓我很焦慮，不滑手機念經的時候，我最平靜。
+    </div>
+    <div class="engage-row">
+      <span class="engage-item"><span class="ei">❤️</span> <span class="engage-red">374</span> 讚</span>
+      <span class="engage-item"><span class="ei">💬</span> <span class="engage-red">355</span> 則留言</span>
+      <span class="engage-item"><span class="ei">👁️</span> 1萬 瀏覽</span>
     </div>
     <div class="comments-section">
-      <div class="comments-title">💬 留言氛圍（142則）</div>
-      <div class="comment-item"><div class="comment-user">主流留言</div><div class="comment-text">「想報名！」「我正在迷茫方向，可以嗎？」「我也想知道我的天賦方向」——高度回應「純公益」的誘因</div></div>
-    </div>
-    <div class="suggestion-box">
-      <div class="suggestion-title">✨ Tilandky 貼文分享建議</div>
-      <div class="suggestion-content">
-        發「限量公益馬雅曆天賦解盤」，開放 20-30 名額（比 100 少更顯稀缺），「替你看見此生的天賦方向」，純互動 / 低門檻，後續轉化為課程學員。
-        <br><br><span class="suggestion-tag">公益解盤</span><span class="suggestion-tag gold">稀缺感</span><span class="suggestion-tag">天賦定位</span>
+      <div class="comments-title">💬 Top 5 留言</div>
+      <div class="comment">
+        <div class="comment-num">1</div>
+        <div class="comment-body">
+          <div class="comment-user">@neinei5202023</div>
+          <div class="comment-text">法鼓山的僧伽大學歡迎您 🙏</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">2</div>
+        <div class="comment-body">
+          <div class="comment-user">@vevenus_4us</div>
+          <div class="comment-text">我自己在中台禪寺下的精舍上課，通常都是先到精舍跟師父聊過，師父會先安排一些活動，會就近觀察是否適合到中台長住，中台長住約一年一樣會有各式各樣的課程以及坡物，這一年雙方觀察是否適合出家。中台禪寺比較嚴謹一些。若是真的對於學習佛法有興趣甚至想更深入修行，就很適合。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">3</div>
+        <div class="comment-body">
+          <div class="comment-user">@ziyuan_0822</div>
+          <div class="comment-text">佛光山短期出家，可以參考看看 🙏</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">4</div>
+        <div class="comment-body">
+          <div class="comment-user">@haorex</div>
+          <div class="comment-text">你知道出家的意義嗎？現在的出家並不代表能入世修行。只有入世接觸了人群，才能修到六度萬行，才能體會眾生因何而苦。在寺廟也只能聽經聞法，並無太大意義。</div>
+        </div>
+      </div>
+      <div class="comment">
+        <div class="comment-num">5</div>
+        <div class="comment-body">
+          <div class="comment-user">@kay210265</div>
+          <div class="comment-text">如果你想出家，先不要把它想成「逃離人生」，而是更嚴格的人生選擇。先確認自己不是因為失戀、壓力、家庭問題、憂鬱或對社會失望而衝動出家。真正的修行很重視長期紀律、戒律、人際磨合與內心穩定。建議先從居士生活開始，長期參與寺院、短期閉關、義工與早晚課，觀察自己能否適應清淡、規律與孤獨的生活。</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ 爆文分析 TAB ═══════════ -->
-<div id="tab-爆文分析" class="tab-content">
-  <div class="page-title">🔥 爆文深度分析</div>
-  <div class="page-subtitle">基於 20 篇高互動貼文，萃取讀者需求、底層信念與 Tilandky 內容規劃建議</div>
-
-  <!-- 內在狀態分群 -->
-  <div class="section-title">一、貼文「內在狀態」分群</div>
-
-  <div class="cluster-section">
-    <div class="cluster-title">🌀 A｜對系統的疲憊與不信任</div>
-    <div class="cluster-subtitle">代表貼文：maxfjtarot（六萬心靈課）、gaga.mandala.art（身心靈警示燈）</div>
-    <div class="cluster-summary">
-      <strong>痛點表面：</strong>花錢上課但沒有改變、被身心靈「傳愛」話術操控、上完課反而更焦慮。<br><br>
-      <strong>底層信念：</strong>「我找到的工具都讓我失望，但我還是相信有真的可以幫我的方法存在。」這群人不是不相信身心靈，而是被糟糕的體驗傷過，正在重建信任。<br><br>
-      <strong>最能共鳴的點：</strong>「不是你不夠努力，是你遇到的方法沒有結構性地幫你改變。」<br><br>
-      <strong>不同聲音：</strong>少數留言認為「任何課程都只是工具，自己沒用好才是問題」。
-    </div>
-  </div>
-
-  <div class="cluster-section">
-    <div class="cluster-title">🪞 B｜自我迷失與定位焦慮</div>
-    <div class="cluster-subtitle">代表貼文：turtle.3007350（32歲找不到定位）、mapdass（不務正業）、yi_lin_liang（離職倒數）</div>
-    <div class="cluster-summary">
-      <strong>痛點表面：</strong>找不到人生方向、不知道自己適合什麼、做了很多事但沒有歸屬感。<br><br>
-      <strong>底層信念：</strong>「我覺得自己有天賦，但找不到出口；或者，我根本不知道自己有沒有天賦。」這是一種「對自己的陌生感」——不是缺乏能力，而是缺乏一個讀懂自己的工具。<br><br>
-      <strong>最能共鳴的點：</strong>「你本來就不是被設計來走單一路線的。」<br><br>
-      <strong>不同聲音：</strong>部分人認為「定位不是找到的，是活出來的」，抗拒工具依賴。
-    </div>
-  </div>
-
-  <div class="cluster-section">
-    <div class="cluster-title">💧 C｜情緒積壓與自我覺察需求</div>
-    <div class="cluster-subtitle">代表貼文：bibiegg2002（越在意越強調）、drjywang（覺察力低的人）、justquiet3011（積蓄見底）</div>
-    <div class="cluster-summary">
-      <strong>痛點表面：</strong>情緒管理失控、在關係中一直受傷、覺察力低卻不知道怎麼提升。<br><br>
-      <strong>底層信念：</strong>「我知道問題在我身上的某個地方，但我看不見它。我需要一面鏡子。」這是 Tilandky 品牌「馬雅之鏡」最直接的對應——讀者渴望的正是一個能幫他們「看見自己」的工具或陪伴者。<br><br>
-      <strong>最能共鳴的點：</strong>「你一直在強調的，正是你最需要療癒的。」<br><br>
-      <strong>不同聲音：</strong>少數認為「自我覺察是奢侈品，先解決生活問題才重要」。
-    </div>
-  </div>
-
-  <div class="cluster-section">
-    <div class="cluster-title">🌱 D｜尋找同溫層與歸屬感</div>
-    <div class="cluster-subtitle">代表貼文：wishingstarland（召喚演算法）、bonnie_dayrr（媽媽族群）、crystalinsight2024（能量同類）</div>
-    <div class="cluster-summary">
-      <strong>痛點表面：</strong>在現實生活中找不到同頻的人，在家庭/職場感到格格不入。<br><br>
-      <strong>底層信念：</strong>「我的靈性需求沒有地方被理解，我想找到和我一樣的人。」這批人積極、有互動意願，是 Tilandky 最容易建立社群的切入點。<br><br>
-      <strong>最能共鳴的點：</strong>「你不孤單，有一群人正在用相同的方式看世界。」
-    </div>
-  </div>
-
-  <!-- 讀者需求與痛點 -->
-  <div class="section-title">二、讀者核心需求與痛點</div>
-  <div class="analysis-grid">
-    <div class="analysis-card">
-      <h3>🔴 高熱度痛點（最多人提）</h3>
-      <div class="pain-item hot"><div class="pain-title">花錢上課沒有結構性改變</div><div class="pain-desc">情緒崩潰≠情緒療癒；課程結束後回到現實仍然崩潰</div><div class="pain-example">→ maxfjtarot 六萬課程貼文 1,851 讚</div></div>
-      <div class="pain-item hot"><div class="pain-title">找不到人生方向/天賦出口</div><div class="pain-desc">30多歲了仍不知道自己適合什麼、天賦在哪</div><div class="pain-example">→ turtle.3007350「32歲找不到定位」373 讚</div></div>
-      <div class="pain-item hot"><div class="pain-title">對身心靈產業有信任危機</div><div class="pain-desc">被「造神文化」「傳愛話術」傷過，想找真正有效的工具</div><div class="pain-example">→ gaga.mandala.art 2,462次瀏覽</div></div>
-    </div>
-    <div class="analysis-card">
-      <h3>🟡 中熱度痛點（有共鳴）</h3>
-      <div class="pain-item gold"><div class="pain-title">找不到同頻的人</div><div class="pain-desc">生活圈/職場沒有理解靈性需求的人，感到孤立</div></div>
-      <div class="pain-item gold"><div class="pain-title">覺察力低卻不知如何提升</div><div class="pain-desc">知道自己有盲點，但不知道從哪裡開始</div></div>
-      <div class="pain-item gold"><div class="pain-title">轉職/離職後的焦慮</div><div class="pain-desc">存款減少、方向不明，靈性成長無法解決現實壓力</div></div>
-      <div class="pain-item gold"><div class="pain-title">媽媽/女性的自我回歸需求</div><div class="pain-desc">在家庭角色中迷失，想找回做自己的力量</div></div>
-    </div>
-  </div>
-
-  <!-- 底層信念分析 -->
-  <div class="section-title">三、底層共同信念（跨所有關鍵字）</div>
-  <div class="analysis-card" style="margin-bottom:20px">
-    <h3>🧠 讀者的三個核心底層信念</h3>
-    <div class="belief-item pain-item">
-      <div class="pain-title">① 「我相信我有天賦，但我找不到它」</div>
-      <div class="pain-desc">這是最普遍的底層信念。讀者不是缺乏自信，而是缺乏一個能「翻譯」自己的系統。馬雅曆和彩虹數字恰好提供了這個「翻譯」框架。</div>
-    </div>
-    <div class="belief-item pain-item">
-      <div class="pain-title">② 「我試過很多方法，但我還沒有真正改變」</div>
-      <div class="pain-desc">花過錢、上過課、看過書，但現實並未改變。他們渴望的是「結構性轉變」，而非情緒上的暫時釋放。希塔療癒的「信念改寫」層次直接回應這個需求。</div>
-    </div>
-    <div class="belief-item pain-item">
-      <div class="pain-title">③ 「我想被理解，但不想被控制」</div>
-      <div class="pain-desc">對「造神文化」高度敏感，渴望有溫度的陪伴，但警惕依賴感。Tilandky「不依賴、給你地圖」的定位與這個信念高度吻合。</div>
-    </div>
-  </div>
-
-  <!-- 內容規劃建議 -->
-  <div class="section-title">四、Tilandky 內容規劃建議（基於實際爆文案例）</div>
-  
-  <div class="content-plan-card">
-    <h3>🔥 優先度 A｜借勢已有共鳴的爆文格式</h3>
-    <div class="plan-item">
-      <div class="plan-num">1</div>
-      <div class="plan-text">
-        <h4>接住「六萬課程沒效果」焦慮</h4>
-        <p>仿 maxfjtarot 格式，用一個個案故事開頭，揭示「情緒崩潰 ≠ 療癒」，說明希塔療癒的信念改寫如何做到結構性改變，末尾放 1:1 個案入口。</p>
-        <div class="hook">💡 鉤子句：「她上完三天課，回到公司第一天就在廁所崩潰。我的1:1療癒不是這樣運作的——」</div>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num">2</div>
-      <div class="plan-text">
-        <h4>接住「32歲找不到定位」族群</h4>
-        <p>回應 turtle.3007350 的極簡爆文，發「你找不到定位，是因為你一直用別人的標準在量自己」，說明馬雅曆如何揭示個人的天賦節奏，帶出課程。</p>
-        <div class="hook">💡 鉤子句：「32歲找不到定位？——你本來就不是被設計來走單一路線的。」</div>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num">3</div>
-      <div class="plan-text">
-        <h4>召喚同類型靈魂（高互動格式）</h4>
-        <p>仿 wishingstarland 格式，「請 Threads 演算法帶我認識：想用馬雅曆找到天賦方向的人、曾對身心靈失望但還沒放棄的人、正在轉職/創業的30+女性」。</p>
-        <div class="hook">💡 目標：100+ 留言，快速累積 TA 互動</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-plan-card">
-    <h3>🌿 優先度 B｜品牌定位型內容</h3>
-    <div class="plan-item">
-      <div class="plan-num">4</div>
-      <div class="plan-text">
-        <h4>「不是聖殿，只是地圖」——建立信任感</h4>
-        <p>針對對身心靈產業有疑慮的讀者，說明馬雅曆和彩虹數字是「工具，不是信仰」，讓人更清醒地認識自己，而不是依賴老師或課程。</p>
-        <div class="hook">💡 鉤子句：「我給你地圖，但路你自己走。這就是我和很多身心靈老師最大的不同。」</div>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num">5</div>
-      <div class="plan-text">
-        <h4>公益馬雅曆天賦解盤（限量引流）</h4>
-        <p>仿 chrisweiche1006 格式，開放 20 名公益馬雅圖騰解盤，私訊報名，替你看見天賦方向。稀缺感 + 公益誘因，快速收集潛在學員名單。</p>
-        <div class="hook">💡 預期留言量：50-100則；轉換：10-20% 進入課程諮詢</div>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num">6</div>
-      <div class="plan-text">
-        <h4>留下生日，解析彩虹數字天賦主題</h4>
-        <p>仿 eric.hypnotist 格式，「留下你的國曆生日，我告訴你彩虹數字中你的生命主題數字是什麼、今年的流年能量」。高留言率、名單收集雙效。</p>
-        <div class="hook">💡 預期留言量：100+ 則，學員名單轉化率高</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-plan-card">
-    <h3>🌈 優先度 C｜深度教育型內容（建立專業形象）</h3>
-    <div class="plan-item">
-      <div class="plan-num">7</div>
-      <div class="plan-text">
-        <h4>「彩虹數字 × 馬雅曆：兩把鑰匙的搭配」</h4>
-        <p>說明兩個工具的差異和互補性，讓讀者理解 Tilandky 雙工具組合的獨特性，建立「整合型」諮詢師的專業識別。</p>
-      </div>
-    </div>
-    <div class="plan-item">
-      <div class="plan-num">8</div>
-      <div class="plan-text">
-        <h4>每週馬雅能量貼文</h4>
-        <p>每週分享當週馬雅能量主題（如紅龍波、白鏡波等），讓粉絲養成追蹤習慣，同時持續曝光馬雅曆的實用性。</p>
-        <div class="hook">💡 可與排程功能結合，每週一自動提醒發文</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 一頁總結 -->
-  <div class="analysis-card" style="background: linear-gradient(135deg, var(--cream), #fff8f0); border: 2px solid var(--gold); margin-top: 8px;">
-    <h3 style="color: var(--gold);">✦ 給 Tilandky 的一句話總結</h3>
-    <p style="font-size: 14px; line-height: 2; color: #444;">
-      Threads 上的受眾不缺信息，缺的是<strong>「一個能真正讀懂我的人」</strong>。他們試過了很多工具，踩過了很多坑，現在渴望的不是又一個課程，而是一個<strong>透明、有結構、讓人清醒的陪伴者</strong>。
-      <br><br>
-      Tilandky 的品牌「馬雅之鏡・靈魂陪伴」，恰好命中這個需求。<strong>策略是：先共鳴，再提供地圖，最後邀請旅程。</strong>
-      不要先賣課，要先讓人感覺「你懂我」。
-    </p>
-  </div>
-</div>
+<footer>
+  Threads 六大關鍵字深度分析 · 含真實留言 · Tilandky 諮詢師 · 資料日期：2026-05-23<br>
+  <a href="index .html">← 返回總覽儀表板</a> ·
+  <a href="Threads受眾洞察儀表板.html">受眾洞察</a> ·
+  <a href="Threads爆文分析儀表板.html">爆文分析</a>
+</footer>
 
 <script>
-function switchTab(name) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
-
-function toggleText(id, btn) {
-  const el = document.getElementById(id);
-  if (el.classList.contains('expanded')) {
-    el.classList.remove('expanded');
-    btn.textContent = '▼ 展開全文';
-  } else {
-    el.classList.add('expanded');
-    btn.textContent = '▲ 收合';
-  }
+function switchTab(index) {
+  document.querySelectorAll('.kw-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === index);
+  });
+  document.querySelectorAll('.page').forEach((p, i) => {
+    p.classList.toggle('active', i === index);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 </body>
