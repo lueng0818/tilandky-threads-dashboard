@@ -3,51 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Threads 生活痛點實戰儀表板｜真實受眾聲音</title>
+<title>Threads 生活痛點實戰儀表板｜Tilandky 身心靈諮詢師</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg: #F8F5F0;
+  --dark: #3A4A33;
+  --olive: #495640;
+  --sage: #7D8A73;
+  --fog: #B5BFAC;
+  --gold: #C8A65A;
+  --gold-light: #D4B872;
+  --cream: #F2EDE2;
+  --sand: #D6C9B3;
+  --card-bg: #FDFAF5;
+  --text: #2d2d2d;
+  --text-muted: #6B7B6E;
+  --border: rgba(73,86,64,.18);
+  --gold-border: rgba(200,166,90,.28);
+}
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', sans-serif;
-  background: #f0ede8;
-  color: #2d2d2d;
+  font-family: 'Noto Sans TC', -apple-system, 'PingFang TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
 }
 
 /* ── HEADER ── */
 header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, #3A4A33 0%, #495640 60%, #5a6e50 100%);
   color: white;
   padding: 36px 40px 28px;
   position: relative;
   overflow: hidden;
+  border-bottom: 3px solid var(--gold);
 }
 header::before {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,.04) 0%, transparent 70%);
+  background: radial-gradient(ellipse at 80% 50%, rgba(200,166,90,.07) 0%, transparent 70%);
 }
-header h1 { font-size:24px; font-weight:800; letter-spacing:.5px; position:relative; z-index:1; }
-header p { font-size:13px; opacity:.7; margin-top:6px; position:relative; z-index:1; line-height:1.6; }
+header h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 24px; font-weight: 700; letter-spacing: .04em;
+  color: var(--gold); position: relative; z-index: 1;
+}
+header p { font-size:13px; color: rgba(242,237,226,.8); margin-top:6px; position:relative; z-index:1; line-height:1.6; }
 .header-nav {
   display: flex; align-items: center; gap: 10px; margin-top: 16px;
   position: relative; z-index: 1; flex-wrap: wrap;
 }
 .nav-chip {
-  background: rgba(255,255,255,.15);
-  border: 1px solid rgba(255,255,255,.25);
-  color: white; text-decoration: none;
+  background: rgba(200,166,90,.15);
+  border: 1px solid rgba(200,166,90,.35);
+  color: var(--gold); text-decoration: none;
   padding: 5px 14px; border-radius: 20px;
   font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  font-family: 'Noto Sans TC', sans-serif;
   transition: background .2s;
 }
-.nav-chip:hover { background: rgba(255,255,255,.28); }
-.nav-chip.active { background: rgba(255,255,255,.3); border-color: rgba(255,255,255,.5); }
+.nav-chip:hover { background: rgba(200,166,90,.28); }
+.nav-chip.active { background: rgba(200,166,90,.32); border-color: rgba(200,166,90,.6); color: var(--gold-light); }
 
 /* ── STATS ROW ── */
 .stats-row {
-  background: #16213e;
+  background: var(--olive);
   display: grid; grid-template-columns: repeat(7, 1fr);
-  border-bottom: 3px solid #0f3460;
+  border-bottom: 2px solid var(--gold-border);
 }
 @media (max-width:900px) { .stats-row { grid-template-columns: repeat(4, 1fr); } }
 .stat-cell {
@@ -56,35 +80,36 @@ header p { font-size:13px; opacity:.7; margin-top:6px; position:relative; z-inde
   cursor: pointer; transition: background .2s;
 }
 .stat-cell:last-child { border-right: none; }
-.stat-cell:hover { background: rgba(255,255,255,.07); }
-.stat-cell.active { background: rgba(255,255,255,.12); }
+.stat-cell:hover { background: rgba(200,166,90,.12); }
+.stat-cell.active { background: rgba(200,166,90,.2); }
 .stat-emoji { font-size: 20px; display: block; margin-bottom: 4px; }
-.stat-num { font-size: 16px; font-weight: 800; color: white; display: block; line-height: 1; }
-.stat-label { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 3px; display: block; }
+.stat-num { font-size: 16px; font-weight: 800; color: var(--gold); display: block; line-height: 1; font-family: 'Noto Sans TC', sans-serif; }
+.stat-label { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 3px; display: block; font-family: 'Noto Sans TC', sans-serif; }
 
 /* ── TABS ── */
 .tab-bar {
-  background: #1a1a2e;
+  background: var(--dark);
   display: flex; overflow-x: auto; gap: 0;
-  border-bottom: 3px solid #e84393;
+  border-bottom: 3px solid var(--gold-border);
   scrollbar-width: none;
 }
 .tab-bar::-webkit-scrollbar { display: none; }
 .tab-btn {
   flex-shrink: 0;
   padding: 13px 20px;
-  color: rgba(255,255,255,.55);
+  color: rgba(255,255,255,.5);
   cursor: pointer;
-  font-size: 13px; font-weight: 700;
+  font-size: 13px; font-weight: 600;
   border-bottom: 3px solid transparent;
   margin-bottom: -3px;
   transition: all .2s;
   white-space: nowrap;
   user-select: none;
   letter-spacing: .3px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
-.tab-btn:hover { color: rgba(255,255,255,.85); background: rgba(255,255,255,.05); }
-.tab-btn.active { color: white; border-bottom-color: #e84393; }
+.tab-btn:hover { color: rgba(255,255,255,.85); background: rgba(200,166,90,.08); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
 
 /* ── PAGES ── */
 .page { display: none; max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
@@ -92,61 +117,71 @@ header p { font-size:13px; opacity:.7; margin-top:6px; position:relative; z-inde
 
 /* ── PAGE HERO ── */
 .page-hero {
-  background: white; border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,.07);
+  background: var(--card-bg); border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(73,86,64,.08);
+  border: 1px solid var(--gold-border);
   padding: 24px 28px; margin-bottom: 24px;
   display: grid; grid-template-columns: auto 1fr auto;
   gap: 20px; align-items: start;
 }
 @media (max-width: 680px) { .page-hero { grid-template-columns: 1fr; } }
 .hero-emoji { font-size: 52px; line-height: 1; }
-.hero-title { font-size: 26px; font-weight: 800; color: #1a1a2e; }
-.hero-sub { font-size: 13px; color: #666; margin-top: 6px; line-height: 1.7; }
+.hero-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 26px; font-weight: 700; color: var(--dark);
+}
+.hero-sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.7; }
 .hero-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
 .tag {
   padding: 3px 11px; border-radius: 20px;
-  font-size: 10px; font-weight: 800; letter-spacing: .5px;
+  font-size: 10px; font-weight: 700; letter-spacing: .5px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
-.tag-red { background: #fde8e8; color: #c0392b; }
-.tag-blue { background: #e8f0fd; color: #1a4aaa; }
-.tag-green { background: #e8fdf0; color: #1a7a40; }
-.tag-purple { background: #f3e8ff; color: #7a2c8b; }
-.tag-amber { background: #fff3e0; color: #8b5e20; }
+.tag-red { background: #fde8e8; color: #b83030; }
+.tag-blue { background: rgba(73,86,64,.1); color: var(--olive); }
+.tag-green { background: rgba(125,138,115,.13); color: #3d5235; }
+.tag-purple { background: rgba(200,166,90,.13); color: #7a5e20; }
+.tag-amber { background: rgba(200,166,90,.16); color: #8b5e20; }
 
 .hero-stats {
   display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
   flex-shrink: 0;
 }
 .hero-stat-badge {
-  background: #f5f0ff; border: 1px solid #d8c8f0;
+  background: rgba(200,166,90,.1); border: 1px solid var(--gold-border);
   padding: 6px 14px; border-radius: 10px;
-  font-size: 12px; font-weight: 700; color: #5a2b8b;
-  text-align: center;
+  font-size: 12px; font-weight: 700; color: #7a5e20;
+  font-family: 'Noto Sans TC', sans-serif; text-align: center;
 }
-.hero-stat-badge .big { font-size: 18px; font-weight: 800; display: block; }
+.hero-stat-badge .big { font-size: 18px; font-weight: 800; display: block; color: var(--gold); }
 
 /* ── INSIGHT STRIP ── */
 .insight {
-  background: linear-gradient(135deg, #f0f4ff, #e8f0fd);
+  background: linear-gradient(135deg, rgba(73,86,64,.05), rgba(200,166,90,.07));
   border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
-  border-left: 4px solid #4a6cf7;
+  border: 1px solid var(--gold-border);
+  border-left: 4px solid var(--gold);
 }
 .insight-label {
-  font-size: 10px; font-weight: 800; color: #1a4aaa;
+  font-size: 10px; font-weight: 800; color: var(--gold);
   text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
-.insight-text { font-size: 13px; line-height: 1.75; color: #2c3e6a; }
-.insight-text strong { color: #0f3460; }
+.insight-text { font-size: 13px; line-height: 1.85; color: var(--text); }
+.insight-text strong { color: var(--dark); }
 
 /* ── POST CARD ── */
 .post-card {
-  background: white; border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  background: var(--card-bg); border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(73,86,64,.07);
   margin-bottom: 24px; overflow: hidden;
-  border-top: 4px solid #e84393;
+  border: 1px solid var(--gold-border);
+  border-top: 4px solid var(--gold);
+  transition: box-shadow .25s, transform .25s;
 }
-.post-card:nth-child(2) { border-top-color: #4a6cf7; }
-.post-card:nth-child(3) { border-top-color: #22c55e; }
+.post-card:hover { box-shadow: 0 6px 24px rgba(200,166,90,.16); transform: translateY(-2px); }
+.post-card:nth-child(2) { border-top-color: var(--sage); }
+.post-card:nth-child(3) { border-top-color: var(--fog); }
 
 .post-top {
   padding: 18px 22px 0;
@@ -154,118 +189,170 @@ header p { font-size:13px; opacity:.7; margin-top:6px; position:relative; z-inde
   flex-wrap: wrap; gap: 10px;
 }
 .post-badge {
-  font-size: 10px; font-weight: 800; color: #e84393;
+  font-size: 10px; font-weight: 800; color: #7a5e20;
   text-transform: uppercase; letter-spacing: 1.5px;
-  background: #fff0f7; padding: 4px 12px; border-radius: 20px;
+  background: rgba(200,166,90,.15); padding: 4px 12px; border-radius: 20px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
-.post-card:nth-child(2) .post-badge { color: #4a6cf7; background: #f0f4ff; }
-.post-card:nth-child(3) .post-badge { color: #16a34a; background: #f0fdf4; }
+.post-card:nth-child(2) .post-badge { color: var(--olive); background: rgba(73,86,64,.1); }
+.post-card:nth-child(3) .post-badge { color: var(--sage); background: rgba(125,138,115,.12); }
 
 .threads-btn {
   display: inline-flex; align-items: center; gap: 5px;
-  background: #000; color: white;
+  background: var(--dark); color: white;
   padding: 6px 14px; border-radius: 20px;
   font-size: 11px; font-weight: 700; text-decoration: none;
   transition: background .2s; letter-spacing: .3px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
-.threads-btn:hover { background: #333; }
+.threads-btn:hover { background: var(--olive); }
 .threads-btn svg { width: 12px; height: 12px; fill: white; }
 
 .post-author {
   padding: 12px 22px 4px;
-  font-size: 12px; color: #999;
+  font-size: 12px; color: var(--text-muted);
+  font-family: 'Noto Sans TC', sans-serif;
 }
-.post-author strong { color: #333; font-size: 13px; }
+.post-author strong { color: var(--dark); font-size: 13px; }
 
 .post-body {
   padding: 6px 22px 16px;
-  font-size: 14px; line-height: 1.8; color: #333;
-  border-bottom: 1px solid #f5f5f5;
+  font-size: 14px; line-height: 1.85; color: var(--text);
+  border-bottom: 1px solid rgba(214,201,179,.45);
 }
 
 .engages {
   padding: 10px 22px;
   display: flex; gap: 16px; flex-wrap: wrap;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid rgba(214,201,179,.45);
 }
 .eng {
   display: flex; align-items: center; gap: 4px;
-  font-size: 12px; font-weight: 700; color: #555;
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  font-family: 'Noto Sans TC', sans-serif;
 }
 .eng .icon { font-size: 14px; }
-.eng .big-num { color: #e84393; font-size: 15px; }
+.eng .big-num { color: var(--gold); font-size: 15px; }
 
 /* ── COMMENTS ── */
 .comments { padding: 18px 22px 22px; }
 .comments-head {
-  font-size: 10px; font-weight: 800; color: #666;
+  font-size: 10px; font-weight: 800; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: 1.5px;
   margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
 .comments-head::after {
-  content: ''; flex: 1; height: 1px; background: #eee;
+  content: ''; flex: 1; height: 1px; background: var(--sand);
 }
 
 .cmt {
   display: flex; gap: 10px; margin-bottom: 11px;
-  padding-bottom: 11px; border-bottom: 1px dashed #f0ede8;
+  padding-bottom: 11px; border-bottom: 1px dashed var(--sand);
 }
 .cmt:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 .cmt-n {
   width: 22px; height: 22px; flex-shrink: 0;
-  background: #e84393; color: white;
+  background: var(--sage); color: white;
   border-radius: 50%; font-size: 10px; font-weight: 800;
   display: flex; align-items: center; justify-content: center;
   margin-top: 2px;
 }
 .cmt-body { flex: 1; }
-.cmt-user { font-size: 10px; font-weight: 800; color: #999; margin-bottom: 3px; }
-.cmt-text { font-size: 13px; line-height: 1.65; color: #444; }
+.cmt-user { font-size: 10px; font-weight: 800; color: var(--text-muted); margin-bottom: 3px; font-family: 'Noto Sans TC', sans-serif; }
+.cmt-text { font-size: 13px; line-height: 1.65; color: var(--text); }
 
 /* ── SECTION LABEL ── */
 .section-label {
-  font-size: 11px; font-weight: 800; color: #4a6cf7;
+  font-size: 11px; font-weight: 800; color: var(--sage);
   text-transform: uppercase; letter-spacing: 2px;
   margin: 8px 0 18px;
   padding-bottom: 8px;
-  border-bottom: 2px solid #c8d8ff;
+  border-bottom: 2px solid var(--sand);
   display: flex; align-items: center; gap: 8px;
+  font-family: 'Noto Sans TC', sans-serif;
 }
 
 /* ── FOOTER ── */
 footer {
-  background: #1a1a2e; color: rgba(255,255,255,.4);
-  text-align: center; padding: 20px; font-size: 11px;
+  background: var(--dark); color: rgba(255,255,255,.4);
+  text-align: center; padding: 22px 20px; font-size: 11px;
   margin-top: 40px; line-height: 1.8;
+  border-top: 2px solid var(--gold-border);
+  font-family: 'Noto Sans TC', sans-serif;
 }
-footer a { color: rgba(255,255,255,.6); text-decoration: none; }
-footer a:hover { color: white; }
+footer a { color: var(--gold); text-decoration: none; opacity: .8; }
+footer a:hover { opacity: 1; color: var(--gold-light); }
 
 /* ── AUDIENCE ALERT ── */
 .audience-alert {
-  background: linear-gradient(135deg, #fff0f7, #fce4ef);
-  border: 1px solid #f9c4da;
+  background: linear-gradient(135deg, rgba(73,86,64,.06), rgba(200,166,90,.07));
+  border: 1px solid var(--gold-border);
   border-radius: 12px; padding: 14px 18px;
   margin-bottom: 24px;
-  font-size: 13px; line-height: 1.7; color: #8b1a4a;
+  font-size: 13px; line-height: 1.7; color: var(--dark);
 }
-.audience-alert strong { color: #c0245e; }
-.audience-alert .ah { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.audience-alert strong { color: var(--olive); }
+.audience-alert .ah { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; color: var(--gold); }
+
+/* ── SOCIAL LINKS IN HEADER ── */
+header a[href*="facebook"]:hover,
+header a[href*="instagram"]:hover,
+header a[href*="linktr"]:hover {
+  background: rgba(255,255,255,.18) !important;
+  color: white !important;
+}
+
+@media (max-width: 700px) {
+  header { padding: 24px 20px 20px; }
+  header > div { flex-direction: column !important; }
+  header > div > div:last-child { align-items: flex-start !important; }
+  .page { padding: 20px 14px; }
+  .post-body { font-size: 13px; }
+}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <header>
-  <h1>🔬 Threads 生活痛點實戰儀表板</h1>
-  <p>真實受眾聲音 · 8大生活困境 · 高互動貼文 + 留言分析 · 取代空泛內容</p>
-  <div class="header-nav">
-    <a href="index .html" class="nav-chip">← 總覽</a>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:rgba(200,166,90,.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-family:'Noto Sans TC',sans-serif;">THREADS 受眾洞察 · 生活痛點實戰儀表板</div>
+      <h1>Tilandky｜覺察日常 · 身心靈整合</h1>
+      <p style="margin-top:8px;font-size:13.5px;color:rgba(242,237,226,.85);font-style:italic;letter-spacing:.03em;">「用三把鑰匙，陪你找回人生座標」</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+        <span style="background:rgba(200,166,90,.18);border:1px solid rgba(200,166,90,.4);color:var(--gold);font-size:10px;font-weight:700;padding:4px 11px;border-radius:6px;letter-spacing:.08em;font-family:'Noto Sans TC',sans-serif;">🌀 十三月亮曆</span>
+        <span style="background:rgba(125,138,115,.2);border:1px solid rgba(125,138,115,.4);color:#b5d4a8;font-size:10px;font-weight:700;padding:4px 11px;border-radius:6px;letter-spacing:.08em;font-family:'Noto Sans TC',sans-serif;">✨ 希塔療癒</span>
+        <span style="background:rgba(200,166,90,.12);border:1px solid rgba(200,166,90,.3);color:var(--gold-light);font-size:10px;font-weight:700;padding:4px 11px;border-radius:6px;letter-spacing:.08em;font-family:'Noto Sans TC',sans-serif;">🌈 彩虹數字</span>
+        <span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:rgba(242,237,226,.65);font-size:10px;font-weight:700;padding:4px 11px;border-radius:6px;letter-spacing:.06em;font-family:'Noto Sans TC',sans-serif;">👩‍🦰 陪過 300+ 位女性</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
+      <div style="font-size:10px;color:rgba(200,166,90,.7);font-family:'Noto Sans TC',sans-serif;font-weight:700;letter-spacing:.06em;text-align:right;">前國防部資訊軍官 → 身心靈整合引路人</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+        <a href="https://www.facebook.com/soulclean1413" target="_blank" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(242,237,226,.8);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px;text-decoration:none;font-family:'Noto Sans TC',sans-serif;transition:background .2s;">📘 FB</a>
+        <a href="https://www.instagram.com/tilandky/" target="_blank" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(242,237,226,.8);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px;text-decoration:none;font-family:'Noto Sans TC',sans-serif;transition:background .2s;">📷 IG</a>
+        <a href="https://linktr.ee/tilandky" target="_blank" style="background:rgba(200,166,90,.25);border:1px solid rgba(200,166,90,.5);color:var(--gold);font-size:10px;font-weight:700;padding:5px 12px;border-radius:20px;text-decoration:none;font-family:'Noto Sans TC',sans-serif;transition:background .2s;">🔗 Linktree</a>
+      </div>
+    </div>
+  </div>
+  <div class="header-nav" style="margin-top:18px;">
+    <a href="index.html" class="nav-chip">← 總覽</a>
     <a href="Threads六關鍵字深度儀表板.html" class="nav-chip">深度留言</a>
     <a href="Threads爆文分析儀表板.html" class="nav-chip">爆文分析</a>
     <span class="nav-chip active">🆕 生活痛點實戰</span>
   </div>
 </header>
+
+<!-- BRAND BELIEF STRIP -->
+<div style="background:linear-gradient(90deg,var(--olive),#3A4A33);padding:10px 40px;display:flex;gap:32px;flex-wrap:wrap;border-bottom:1px solid var(--gold-border);">
+  <span style="font-size:11px;color:rgba(242,237,226,.65);font-family:'Noto Sans TC',sans-serif;white-space:nowrap;">🌿 靈性不是躺平的藉口，是你重新設計生活的工具</span>
+  <span style="font-size:11px;color:rgba(200,166,90,.7);font-family:'Noto Sans TC',sans-serif;white-space:nowrap;font-weight:700;">✦</span>
+  <span style="font-size:11px;color:rgba(242,237,226,.65);font-family:'Noto Sans TC',sans-serif;white-space:nowrap;">你不是不夠努力，是你逆著自己的能量在走</span>
+  <span style="font-size:11px;color:rgba(200,166,90,.7);font-family:'Noto Sans TC',sans-serif;white-space:nowrap;font-weight:700;">✦</span>
+  <span style="font-size:11px;color:rgba(242,237,226,.65);font-family:'Noto Sans TC',sans-serif;white-space:nowrap;">真正的療癒，是讓你在混亂裡也能穩穩地做自己</span>
+</div>
 
 <!-- STATS ROW -->
 <div class="stats-row">
@@ -854,12 +941,12 @@ footer a:hover { color: white; }
   </div>
 
   <!-- 痛點地圖 -->
-  <div style="background:white; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:22px 26px; margin-bottom:22px;">
-    <div style="font-size:11px; font-weight:800; color:#c0392b; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:14px;">🗺️ 受眾痛點地圖 — 兩層受眾，同一道裂縫</div>
+  <div style="background:var(--card-bg); border-radius:16px; box-shadow:0 2px 12px rgba(73,86,64,.07); border:1px solid var(--gold-border); padding:22px 26px; margin-bottom:22px;">
+    <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:14px; font-family:'Noto Sans TC',sans-serif;">🗺️ 受眾痛點地圖 — 兩層受眾，同一道裂縫</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-      <div style="background:#fff8f0; border-radius:12px; padding:16px; border-left:4px solid #e67e22;">
-        <div style="font-size:13px; font-weight:800; color:#8b4513; margin-bottom:10px;">😤 身為父母的人</div>
-        <div style="font-size:12px; color:#5a3010; line-height:2;">
+      <div style="background:rgba(200,166,90,.07); border-radius:12px; padding:16px; border-left:4px solid var(--gold);">
+        <div style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:10px; font-family:'Noto Serif TC',serif;">😤 身為父母的人</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:2; font-family:'Noto Sans TC',sans-serif;">
           • 說了10次還是不做，控制不住自己的怒<br>
           • 孩子青春期開始就像陌生人<br>
           • 明明為他好，他卻說我在控制他<br>
@@ -868,9 +955,9 @@ footer a:hover { color: white; }
           • 擔心自己把原生家庭的方式複製給孩子
         </div>
       </div>
-      <div style="background:#f0f8ff; border-radius:12px; padding:16px; border-left:4px solid #2980b9;">
-        <div style="font-size:13px; font-weight:800; color:#1a4a7a; margin-bottom:10px;">😔 身為孩子的人（已成年）</div>
-        <div style="font-size:12px; color:#1a3a5a; line-height:2;">
+      <div style="background:rgba(125,138,115,.08); border-radius:12px; padding:16px; border-left:4px solid var(--sage);">
+        <div style="font-size:13px; font-weight:800; color:var(--dark); margin-bottom:10px; font-family:'Noto Serif TC',serif;">😔 身為孩子的人（已成年）</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:2; font-family:'Noto Sans TC',sans-serif;">
           • 被父母情緒勒索，拒絕就有罪惡感<br>
           • 父母只在乎成績/工作，從沒問過感受<br>
           • 每次回家就像上戰場<br>
@@ -880,7 +967,7 @@ footer a:hover { color: white; }
         </div>
       </div>
     </div>
-    <div style="margin-top:14px; background:#f5f0ff; border-radius:10px; padding:12px 16px; font-size:12px; color:#5a2b8b; line-height:1.8;">
+    <div style="margin-top:14px; background:rgba(73,86,64,.06); border-radius:10px; padding:12px 16px; font-size:12px; color:var(--dark); line-height:1.8; font-family:'Noto Sans TC',sans-serif; border-left:3px solid var(--sage);">
       <strong>共同核心問題：</strong>「為什麼我們明明相愛，卻老是傷彼此？」—— 這是頻率、信念、神經系統的問題，不是愛的問題。
     </div>
   </div>
@@ -1054,7 +1141,7 @@ footer a:hover { color: white; }
       <span class="eng"><span class="icon">❤️</span> 父母族群最高頻討論</span>
       <span class="eng"><span class="icon">💬</span> 多串討論</span>
     </div>
-    <div style="background:#fff3e0; border-radius:10px; padding:12px 16px; margin:12px 16px 16px; font-size:12px; color:#8b5e20; border-left:3px solid #e67e22;">
+    <div style="background:rgba(200,166,90,.08); border-radius:10px; padding:12px 16px; margin:12px 16px 16px; font-size:12px; color:#7a5e20; border-left:3px solid var(--gold); font-family:'Noto Sans TC',sans-serif;">
       <strong>🪄 Tilandky 切入角：</strong>
       「孩子的沉迷行為是訊號，不是問題。當親子連結夠強，手機根本競爭不過你。」
       ——用<strong>馬雅曆解讀孩子的圖騰</strong>（他的能量需要被看見的方式）＋<strong>希塔療癒清理「我的孩子不聽我的話」這個信念</strong>，讓父母從對立轉成理解。
@@ -1094,7 +1181,7 @@ footer a:hover { color: white; }
         </div>
       </div>
     </div>
-    <div style="background:#f3e8ff; border-radius:10px; padding:12px 16px; margin:12px 16px 16px; font-size:12px; color:#5a2b8b; border-left:3px solid #8b5cb8;">
+    <div style="background:rgba(125,138,115,.09); border-radius:10px; padding:12px 16px; margin:12px 16px 16px; font-size:12px; color:#3d5235; border-left:3px solid var(--sage); font-family:'Noto Sans TC',sans-serif;">
       <strong>🪄 Tilandky 切入角：</strong>
       「家族創傷不是命，是信念——而信念可以清理。」
       希塔療癒的<strong>「家族信念清理」</strong>是 Tilandky 最直接的工具切入點：把「我的孩子就是難管」「我天生就不是好父母」這些家族層信念清掉，換上新的可能性。
@@ -1103,12 +1190,12 @@ footer a:hover { color: white; }
   </div>
 
   <!-- Tilandky 實戰貼文建議 -->
-  <div style="background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:16px; padding:24px 28px; margin-top:8px;">
-    <div style="font-size:11px; font-weight:800; color:#e84393; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:16px;">✍️ Tilandky 實戰貼文建議 — 親子主題</div>
+  <div style="background:linear-gradient(135deg,#3A4A33,#495640); border-radius:16px; padding:24px 28px; margin-top:8px;">
+    <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:16px; font-family:'Noto Sans TC',sans-serif;">✍️ Tilandky 實戰貼文建議 — 親子主題</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-      <div style="background:rgba(255,255,255,.08); border-radius:10px; padding:14px;">
-        <div style="font-size:11px; font-weight:800; color:#e84393; margin-bottom:8px;">🎯 給父母族群</div>
-        <div style="font-size:11px; color:rgba(255,255,255,.8); line-height:2;">
+      <div style="background:rgba(200,166,90,.12); border-radius:10px; padding:14px; border-top:2px solid var(--gold);">
+        <div style="font-size:11px; font-weight:800; color:var(--gold); margin-bottom:8px; font-family:'Noto Sans TC',sans-serif;">🎯 給父母族群</div>
+        <div style="font-size:11px; color:rgba(242,237,226,.85); line-height:2; font-family:'Noto Sans TC',sans-serif;">
           • 「孩子的叛逆，是他在說什麼？」（共感式貼文）<br>
           • 「我查過我孩子的馬雅曆圖騰——才知道為什麼他跟我永遠接不上」（示範型）<br>
           • 「對孩子發完火之後的5分鐘，你在做什麼？」（提問型）<br>
@@ -1116,9 +1203,9 @@ footer a:hover { color: white; }
           • 「我怎麼用希塔幫一位媽媽清掉了『我不是好媽媽』這個信念」（案例型）
         </div>
       </div>
-      <div style="background:rgba(255,255,255,.08); border-radius:10px; padding:14px;">
-        <div style="font-size:11px; font-weight:800; color:#4a9eff; margin-bottom:8px;">🎯 給成人孩子族群</div>
-        <div style="font-size:11px; color:rgba(255,255,255,.8); line-height:2;">
+      <div style="background:rgba(125,138,115,.15); border-radius:10px; padding:14px; border-top:2px solid var(--sage);">
+        <div style="font-size:11px; font-weight:800; color:#b5d4a8; margin-bottom:8px; font-family:'Noto Sans TC',sans-serif;">🎯 給成人孩子族群</div>
+        <div style="font-size:11px; color:rgba(242,237,226,.85); line-height:2; font-family:'Noto Sans TC',sans-serif;">
           • 「你拒絕父母，有罪惡感嗎？這句話送給你」（共感型）<br>
           • 「我媽對我情緒勒索——但她也是個沒被好好對待的孩子」（轉化型）<br>
           • 「和父母和解，不代表接受他們傷過你的事」（釐清型）<br>
@@ -1127,8 +1214,8 @@ footer a:hover { color: white; }
         </div>
       </div>
     </div>
-    <div style="margin-top:14px; background:rgba(232,67,147,.15); border-radius:10px; padding:12px 16px; font-size:11px; color:rgba(255,255,255,.85); line-height:1.8;">
-      <strong style="color:#e84393;">⚡ 最高轉發潛力鉤子：</strong>
+    <div style="margin-top:14px; background:rgba(200,166,90,.15); border-radius:10px; padding:12px 16px; font-size:11px; color:rgba(242,237,226,.9); line-height:1.8; font-family:'Noto Sans TC',sans-serif; border-left:3px solid var(--gold);">
+      <strong style="color:var(--gold);">⚡ 最高轉發潛力鉤子：</strong>
       「你不是不孝，你是還沒找到既保護自己、又不切斷連結的方法。」
       「家族創傷不是命——信念可以在你這裡斷掉。」
       「你對孩子說的那句話，是誰先對你說的？」
@@ -1236,10 +1323,22 @@ footer a:hover { color: white; }
 </div>
 
 <footer>
-  Threads 生活痛點實戰儀表板 · 7大真實生活困境分析 · Tilandky 諮詢師 · 2026-05-23<br>
-  <a href="index .html">← 返回總覽</a> ·
-  <a href="Threads六關鍵字深度儀表板.html">深度留言分析</a> ·
-  <a href="Threads爆文分析儀表板.html">爆文分析</a>
+  <div style="color:var(--gold);font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;margin-bottom:4px;letter-spacing:.06em;">Tilandky｜覺察日常 · 身心靈整合</div>
+  <div style="font-size:12px;color:rgba(242,237,226,.5);margin-bottom:12px;font-family:'Noto Sans TC',sans-serif;font-style:italic;">「用三把鑰匙，陪你找回人生座標」</div>
+  <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:12px;">
+    <a href="https://www.facebook.com/soulclean1413" target="_blank">📘 Facebook</a>
+    <a href="https://www.instagram.com/tilandky/" target="_blank">📷 Instagram @tilandky</a>
+    <a href="https://www.threads.net/@tilandky" target="_blank">🧵 Threads @tilandky</a>
+    <a href="https://linktr.ee/tilandky" target="_blank">🔗 linktr.ee/tilandky</a>
+  </div>
+  <div style="font-size:11px;color:rgba(242,237,226,.25);">
+    Threads 生活痛點實戰儀表板 · 7大真實生活困境分析 · 2026-05-23
+  </div>
+  <div style="font-size:11px;color:rgba(242,237,226,.2);margin-top:4px;">
+    <a href="index.html">← 返回總覽</a> ·
+    <a href="Threads六關鍵字深度儀表板.html">深度留言分析</a> ·
+    <a href="Threads爆文分析儀表板.html">爆文分析</a>
+  </div>
 </footer>
 
 <script>
