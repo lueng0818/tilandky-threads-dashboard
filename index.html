@@ -6,16 +6,16 @@
 <title>Threads 生活痛點實戰儀表板｜Tilandky 諮詢師</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang TC',sans-serif; background:#f0ede8; color:#2d2d2d; min-height:100vh; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang TC',sans-serif; background:#F8F5F0; color:#2d2d2d; min-height:100vh; }
 
 /* HEADER */
-header { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); color:white; padding:32px 40px 24px; position:relative; overflow:hidden; }
+header { background:linear-gradient(135deg,#3A4A33 0%,#495640 50%,#5a6e50 100%); color:white; padding:32px 40px 24px; position:relative; overflow:hidden; }
 header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 80% 50%,rgba(255,255,255,.04) 0%,transparent 70%); }
 header h1 { font-size:22px; font-weight:800; letter-spacing:.5px; position:relative; z-index:1; }
 header p { font-size:12px; opacity:.7; margin-top:5px; position:relative; z-index:1; line-height:1.6; }
 
 /* STATS ROW */
-.stats-row { background:#16213e; display:grid; grid-template-columns:repeat(8,1fr); border-bottom:3px solid #0f3460; }
+.stats-row { background:#495640; display:grid; grid-template-columns:repeat(8,1fr); border-bottom:3px solid #5a6e50; }
 @media(max-width:900px){ .stats-row { grid-template-columns:repeat(4,1fr); } }
 .stat-cell { padding:13px 8px; text-align:center; border-right:1px solid rgba(255,255,255,.08); cursor:pointer; transition:background .2s; }
 .stat-cell:last-child { border-right:none; }
@@ -26,11 +26,11 @@ header p { font-size:12px; opacity:.7; margin-top:5px; position:relative; z-inde
 .stat-label { font-size:9px; color:rgba(255,255,255,.55); margin-top:3px; display:block; }
 
 /* TAB BAR */
-.tab-bar { background:#1a1a2e; display:flex; overflow-x:auto; gap:0; border-bottom:3px solid #e84393; scrollbar-width:none; }
+.tab-bar { background:#3A4A33; display:flex; overflow-x:auto; gap:0; border-bottom:3px solid #C8A65A; scrollbar-width:none; }
 .tab-bar::-webkit-scrollbar { display:none; }
 .tab-btn { flex-shrink:0; padding:12px 18px; color:rgba(255,255,255,.55); cursor:pointer; font-size:12px; font-weight:700; border-bottom:3px solid transparent; margin-bottom:-3px; transition:all .2s; white-space:nowrap; user-select:none; letter-spacing:.3px; }
 .tab-btn:hover { color:rgba(255,255,255,.85); background:rgba(255,255,255,.05); }
-.tab-btn.active { color:white; border-bottom-color:#e84393; }
+.tab-btn.active { color:white; border-bottom-color:#C8A65A; }
 
 /* PAGES */
 .page { display:none; max-width:1100px; margin:0 auto; padding:26px 20px; }
@@ -40,60 +40,60 @@ header p { font-size:12px; opacity:.7; margin-top:5px; position:relative; z-inde
 .page-hero { background:white; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,.07); padding:22px 26px; margin-bottom:22px; display:grid; grid-template-columns:auto 1fr auto; gap:18px; align-items:start; }
 @media(max-width:680px){ .page-hero { grid-template-columns:1fr; } }
 .hero-emoji { font-size:48px; line-height:1; }
-.hero-title { font-size:24px; font-weight:800; color:#1a1a2e; }
+.hero-title { font-size:24px; font-weight:800; color:#3A4A33; }
 .hero-sub { font-size:13px; color:#666; margin-top:6px; line-height:1.7; }
 .hero-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
 .tag { padding:3px 10px; border-radius:20px; font-size:10px; font-weight:800; letter-spacing:.5px; }
 .tag-red { background:#fde8e8; color:#c0392b; }
-.tag-blue { background:#e8f0fd; color:#1a4aaa; }
-.tag-green { background:#e8fdf0; color:#1a7a40; }
-.tag-purple { background:#f3e8ff; color:#7a2c8b; }
-.tag-amber { background:#fff3e0; color:#8b5e20; }
+.tag-blue { background:#edf2e8; color:#3A4A33; }
+.tag-green { background:#e4ede0; color:#495640; }
+.tag-purple { background:#e8ede4; color:#5a6e50; }
+.tag-amber { background:#f9f0d9; color:#7a5a1a; }
 .hero-stats { display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex-shrink:0; }
-.hero-stat-badge { background:#f5f0ff; border:1px solid #d8c8f0; padding:6px 12px; border-radius:10px; font-size:11px; font-weight:700; color:#5a2b8b; text-align:center; }
+.hero-stat-badge { background:#EDE8D9; border:1px solid #D6C9B3; padding:6px 12px; border-radius:10px; font-size:11px; font-weight:700; color:#495640; text-align:center; }
 .hero-stat-badge .big { font-size:17px; font-weight:800; display:block; }
 
 /* INSIGHT */
-.insight { background:linear-gradient(135deg,#f0f4ff,#e8f0fd); border-radius:12px; padding:16px 20px; margin-bottom:22px; border-left:4px solid #4a6cf7; }
-.insight-label { font-size:10px; font-weight:800; color:#1a4aaa; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
-.insight-text { font-size:13px; line-height:1.75; color:#2c3e6a; }
-.insight-text strong { color:#0f3460; }
+.insight { background:linear-gradient(135deg,#F2EDE2,#EDE8D9); border-radius:12px; padding:16px 20px; margin-bottom:22px; border-left:4px solid #7D8A73; }
+.insight-label { font-size:10px; font-weight:800; color:#495640; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+.insight-text { font-size:13px; line-height:1.75; color:#3A4A33; }
+.insight-text strong { color:#5a6e50; }
 
 /* SECTION LABEL */
 .section-label { font-size:11px; font-weight:800; color:#888; text-transform:uppercase; letter-spacing:1.5px; margin:0 0 14px; }
 
 /* POST CARD */
 .post-card { background:white; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,.07); margin-bottom:22px; overflow:hidden; }
-.post-card:nth-child(odd) { border-top:4px solid #e84393; }
-.post-card:nth-child(even) { border-top:4px solid #4a6cf7; }
+.post-card:nth-child(odd) { border-top:4px solid #C8A65A; }
+.post-card:nth-child(even) { border-top:4px solid #7D8A73; }
 .post-top { display:flex; align-items:center; justify-content:space-between; padding:12px 16px 0; gap:10px; flex-wrap:wrap; }
-.post-badge { font-size:10px; font-weight:800; background:#1a1a2e; color:white; padding:4px 10px; border-radius:20px; letter-spacing:.5px; }
-.threads-btn { display:inline-flex; align-items:center; gap:6px; background:#1a1a2e; color:white; text-decoration:none; padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; transition:background .2s; flex-shrink:0; }
-.threads-btn:hover { background:#e84393; }
+.post-badge { font-size:10px; font-weight:800; background:#3A4A33; color:white; padding:4px 10px; border-radius:20px; letter-spacing:.5px; }
+.threads-btn { display:inline-flex; align-items:center; gap:6px; background:#3A4A33; color:white; text-decoration:none; padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; transition:background .2s; flex-shrink:0; }
+.threads-btn:hover { background:#C8A65A; }
 .threads-btn svg { width:14px; height:14px; fill:white; }
 .post-author { padding:8px 16px 0; font-size:11px; color:#999; }
 .post-body { padding:10px 16px 14px; font-size:13px; line-height:1.85; color:#333; }
 .engages { display:flex; gap:14px; padding:0 16px 14px; flex-wrap:wrap; }
 .eng { display:flex; align-items:center; gap:5px; font-size:12px; color:#666; }
 .icon { font-size:14px; }
-.big-num { font-size:15px; font-weight:800; color:#e84393; }
+.big-num { font-size:15px; font-weight:800; color:#C8A65A; }
 
 /* COMMENTS */
 .comments { background:#f8f8f8; border-top:1px solid #eee; padding:14px 16px; }
 .comments-head { font-size:10px; font-weight:800; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
 .cmt { display:flex; gap:10px; margin-bottom:10px; }
 .cmt:last-child { margin-bottom:0; }
-.cmt-n { width:20px; height:20px; background:#e84393; color:white; border-radius:50%; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.cmt-n { width:20px; height:20px; background:#C8A65A; color:white; border-radius:50%; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .cmt-body { flex:1; }
-.cmt-user { font-size:11px; font-weight:700; color:#1a1a2e; margin-bottom:3px; }
+.cmt-user { font-size:11px; font-weight:700; color:#3A4A33; margin-bottom:3px; }
 .cmt-text { font-size:12px; color:#444; line-height:1.6; }
 
 /* STRATEGY CARD (品牌策略室) */
 .strategy-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:22px; }
 @media(max-width:700px){ .strategy-grid { grid-template-columns:1fr; } }
 .strategy-card { background:white; border-radius:14px; box-shadow:0 2px 10px rgba(0,0,0,.07); padding:18px 20px; }
-.strategy-card-title { font-size:12px; font-weight:800; color:#1a1a2e; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-.strategy-card-title span { background:#e84393; color:white; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.strategy-card-title { font-size:12px; font-weight:800; color:#3A4A33; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.strategy-card-title span { background:#C8A65A; color:white; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
 .tool-row { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #f0f0f0; font-size:12px; }
 .tool-row:last-child { border-bottom:none; }
 .tool-badge { padding:2px 8px; border-radius:8px; font-size:10px; font-weight:800; flex-shrink:0; }
@@ -108,13 +108,13 @@ header p { font-size:12px; opacity:.7; margin-top:5px; position:relative; z-inde
 /* FUNNEL */
 .funnel-step { display:flex; gap:14px; align-items:flex-start; padding:12px 0; border-bottom:1px dashed #e0e0e0; }
 .funnel-step:last-child { border-bottom:none; }
-.funnel-num { width:32px; height:32px; border-radius:50%; background:#0f3460; color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
-.funnel-content .title { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
+.funnel-num { width:32px; height:32px; border-radius:50%; background:#5a6e50; color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
+.funnel-content .title { font-size:13px; font-weight:700; color:#3A4A33; margin-bottom:4px; }
 .funnel-content .desc { font-size:12px; color:#555; line-height:1.6; }
-.funnel-content .ex { font-size:11px; color:#e84393; font-style:italic; margin-top:4px; }
+.funnel-content .ex { font-size:11px; color:#C8A65A; font-style:italic; margin-top:4px; }
 
 /* FOOTER */
-footer { background:#1a1a2e; color:rgba(255,255,255,.5); text-align:center; padding:20px; font-size:11px; line-height:2; margin-top:20px; }
+footer { background:#3A4A33; color:rgba(255,255,255,.5); text-align:center; padding:20px; font-size:11px; line-height:2; margin-top:20px; }
 footer strong { color:rgba(255,255,255,.8); }
 </style>
 </head>
@@ -257,7 +257,7 @@ footer strong { color:rgba(255,255,255,.8); }
       <span class="eng"><span class="icon">❤️</span> 極高轉發</span>
       <span class="eng"><span class="icon">💬</span> 引發大量告白式留言</span>
     </div>
-    <div style="background:#fff0f7;border-radius:10px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#8b1a50;border-left:3px solid #e84393;">
+    <div style="background:#F2EDE2;border-radius:10px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#3A4A33;border-left:3px solid #C8A65A;">
       <strong>🪄 Tilandky 切入角：</strong>「你在感情裡一再重複的這個模式，是有根源的。彩虹數字可以告訴你：你的天生關係課題是什麼，以及怎麼從根本清理它。」
     </div>
   </div>
@@ -358,7 +358,7 @@ footer strong { color:rgba(255,255,255,.8); }
       <span class="eng"><span class="icon">❤️</span> 職場族群高共鳴</span>
       <span class="eng"><span class="icon">💬</span> 大量「根本在說我」留言</span>
     </div>
-    <div style="background:#e8f0fd;border-radius:10px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#1a3a7a;border-left:3px solid #4a6cf7;">
+    <div style="background:#e8f0fd;border-radius:10px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#1a3a7a;border-left:3px solid #7D8A73;">
       <strong>🪄 Tilandky 切入角：</strong>「馬雅曆可以解讀你這個人天生的表達頻率——有些圖騰說話是『點到為止』，有些是『需要故事包裹』。當你用錯了方式，對方接收不到，不是你不會說，是你還不知道自己的頻率。」
     </div>
   </div>
@@ -701,7 +701,7 @@ footer strong { color:rgba(255,255,255,.8); }
         </div>
       </div>
     </div>
-    <div style="margin-top:12px;background:#f5f0ff;border-radius:10px;padding:10px 14px;font-size:12px;color:#5a2b8b;line-height:1.8;">
+    <div style="margin-top:12px;background:#EDE8D9;border-radius:10px;padding:10px 14px;font-size:12px;color:#3A4A33;line-height:1.8;">
       <strong>共同核心問題：</strong>「為什麼我們明明相愛，卻老是傷彼此？」—— 這是頻率、信念、神經系統的問題，不是愛的問題。
     </div>
   </div>
@@ -785,7 +785,7 @@ footer strong { color:rgba(255,255,255,.8); }
       <strong>你以為改變了，但憤怒一來，身體就回到那個4歲的你被對待的方式。那不是你的錯，那是還沒被癒合的傷。</strong>
     </div>
     <div class="engages"><span class="eng"><span class="icon">❤️</span> 超高轉發</span><span class="eng"><span class="icon">💬</span>「說出了我說不出的話」</span></div>
-    <div style="background:#f3e8ff;border-radius:10px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#5a2b8b;border-left:3px solid #8b5cb8;">
+    <div style="background:#EDE8D9;border-radius:10px;padding:12px 16px;margin:0 16px 16px;font-size:12px;color:#3A4A33;border-left:3px solid #7D8A73;">
       <strong>🪄 Tilandky 切入角：</strong>「家族創傷不是命，是信念——而信念可以清理。」希塔療癒的<strong>「家族信念清理」</strong>是最直接的工具：把「我天生就不是好父母」這類信念清掉，換上新的可能性。
     </div>
   </div>
@@ -897,14 +897,14 @@ footer strong { color:rgba(255,255,255,.8); }
 
   <!-- 優先度地圖 -->
   <div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:20px;">
-    <div style="font-size:11px;font-weight:800;color:#e84393;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">📊 七大主題發文優先度</div>
+    <div style="font-size:11px;font-weight:800;color:#C8A65A;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">📊 七大主題發文優先度</div>
     <div class="priority-row"><div class="p-rank" style="background:#c0392b;">1</div><div class="p-label"><strong>感情/婚姻困境</strong><br><span style="font-size:11px;color:#888;">最高互動 · 1970讚 · 全年齡共鳴</span></div><div class="p-bar" style="color:#c0392b;">★★★★★</div></div>
-    <div class="priority-row"><div class="p-rank" style="background:#e84393;">2</div><div class="p-label"><strong>事業/人生定位</strong><br><span style="font-size:11px;color:#888;">同溫層最深 · 直接轉諮詢</span></div><div class="p-bar" style="color:#e84393;">★★★★★</div></div>
+    <div class="priority-row"><div class="p-rank" style="background:#C8A65A;">2</div><div class="p-label"><strong>事業/人生定位</strong><br><span style="font-size:11px;color:#888;">同溫層最深 · 直接轉諮詢</span></div><div class="p-bar" style="color:#C8A65A;">★★★★★</div></div>
     <div class="priority-row"><div class="p-rank" style="background:#8b5cb8;">3</div><div class="p-label"><strong>親子/原生家庭</strong><br><span style="font-size:11px;color:#888;">高轉發 · 兩層受眾 · 深度療癒需求</span></div><div class="p-bar" style="color:#8b5cb8;">★★★★☆</div></div>
-    <div class="priority-row"><div class="p-rank" style="background:#4a6cf7;">4</div><div class="p-label"><strong>身心健康警訊</strong><br><span style="font-size:11px;color:#888;">全族群痛點 · 引流最廣</span></div><div class="p-bar" style="color:#4a6cf7;">★★★★☆</div></div>
+    <div class="priority-row"><div class="p-rank" style="background:#7D8A73;">4</div><div class="p-label"><strong>身心健康警訊</strong><br><span style="font-size:11px;color:#888;">全族群痛點 · 引流最廣</span></div><div class="p-bar" style="color:#7D8A73;">★★★★☆</div></div>
     <div class="priority-row"><div class="p-rank" style="background:#e67e22;">5</div><div class="p-label"><strong>運勢低迷/轉機</strong><br><span style="font-size:11px;color:#888;">靈性工具最直接入口</span></div><div class="p-bar" style="color:#e67e22;">★★★☆☆</div></div>
-    <div class="priority-row"><div class="p-rank" style="background:#27ae60;">6</div><div class="p-label"><strong>財運/金錢困境</strong><br><span style="font-size:11px;color:#888;">靈性×現實雙層 · 課程潛力大</span></div><div class="p-bar" style="color:#27ae60;">★★★☆☆</div></div>
-    <div class="priority-row"><div class="p-rank" style="background:#7f8c8d;">7</div><div class="p-label"><strong>溝通失效</strong><br><span style="font-size:11px;color:#888;">普遍共鳴但切入點需靈性框架</span></div><div class="p-bar" style="color:#7f8c8d;">★★★☆☆</div></div>
+    <div class="priority-row"><div class="p-rank" style="background:#495640;">6</div><div class="p-label"><strong>財運/金錢困境</strong><br><span style="font-size:11px;color:#888;">靈性×現實雙層 · 課程潛力大</span></div><div class="p-bar" style="color:#495640;">★★★☆☆</div></div>
+    <div class="priority-row"><div class="p-rank" style="background:#B5BFAC;">7</div><div class="p-label"><strong>溝通失效</strong><br><span style="font-size:11px;color:#888;">普遍共鳴但切入點需靈性框架</span></div><div class="p-bar" style="color:#B5BFAC;">★★★☆☆</div></div>
   </div>
 
   <!-- 工具 × 痛點 -->
@@ -922,17 +922,17 @@ footer strong { color:rgba(255,255,255,.8); }
       <div style="font-size:12px;color:#555;line-height:2.2;">
         <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週一</span><span style="font-weight:700;color:#c0392b;">感情/關係</span><span style="color:#888;">共感鉤子貼文</span></div>
         <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週二</span><span style="font-weight:700;color:#8b5cb8;">親子/原生</span><span style="color:#888;">教育型/轉化型</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週三</span><span style="font-weight:700;color:#4a6cf7;">身心健康</span><span style="color:#888;">症狀解讀貼文</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週四</span><span style="font-weight:700;color:#e84393;">事業定位</span><span style="color:#888;">工具示範/案例</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週三</span><span style="font-weight:700;color:#7D8A73;">身心健康</span><span style="color:#888;">症狀解讀貼文</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週四</span><span style="font-weight:700;color:#C8A65A;">事業定位</span><span style="color:#888;">工具示範/案例</span></div>
         <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span>週五</span><span style="font-weight:700;color:#e67e22;">運勢/盧恩</span><span style="color:#888;">本週能量解讀</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>週末</span><span style="font-weight:700;color:#27ae60;">財運/互動</span><span style="color:#888;">提問型/分享型</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>週末</span><span style="font-weight:700;color:#495640;">財運/互動</span><span style="color:#888;">提問型/分享型</span></div>
       </div>
     </div>
   </div>
 
   <!-- 黃金鉤子句庫 -->
   <div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:20px;">
-    <div style="font-size:11px;font-weight:800;color:#e84393;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">🎣 黃金鉤子句庫（按類別）</div>
+    <div style="font-size:11px;font-weight:800;color:#C8A65A;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">🎣 黃金鉤子句庫（按類別）</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
         <div style="font-size:10px;font-weight:800;color:#c0392b;margin-bottom:6px;">💔 感情/婚姻</div>
@@ -947,12 +947,12 @@ footer strong { color:rgba(255,255,255,.8); }
         <div class="hook-item">「你不是不孝，你只是還沒找到保護自己又不切斷連結的方法。」</div>
       </div>
       <div>
-        <div style="font-size:10px;font-weight:800;color:#4a6cf7;margin-bottom:6px;">🫁 身心健康</div>
+        <div style="font-size:10px;font-weight:800;color:#7D8A73;margin-bottom:6px;">🫁 身心健康</div>
         <div class="hook-item">「你的身體不是在背叛你，它是在替你說一句你不敢說的話。」</div>
         <div class="hook-item">「不是你不會放鬆，是你的神經系統還不相信現在是安全的。」</div>
       </div>
       <div>
-        <div style="font-size:10px;font-weight:800;color:#e84393;margin-bottom:6px;">🚧 事業定位</div>
+        <div style="font-size:10px;font-weight:800;color:#C8A65A;margin-bottom:6px;">🚧 事業定位</div>
         <div class="hook-item">「你不缺課，你缺的是知道自己這一生的任務是什麼。」</div>
         <div class="hook-item">「原來我不是沒能力，只是還沒找到屬於我的系統。」</div>
       </div>
@@ -961,7 +961,7 @@ footer strong { color:rgba(255,255,255,.8); }
         <div class="hook-item">「你不是運氣不好，你只是還在蓄積期。轉機不是撞上的，是讀懂了才能準備好迎接的。」</div>
       </div>
       <div>
-        <div style="font-size:10px;font-weight:800;color:#27ae60;margin-bottom:6px;">💰 財運/金錢</div>
+        <div style="font-size:10px;font-weight:800;color:#495640;margin-bottom:6px;">💰 財運/金錢</div>
         <div class="hook-item">「你存不住錢，不是因為花太多，是因為潛意識覺得自己不值得留住它。」</div>
       </div>
     </div>
@@ -969,7 +969,7 @@ footer strong { color:rgba(255,255,255,.8); }
 
   <!-- 轉換漏斗 -->
   <div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:20px;">
-    <div style="font-size:11px;font-weight:800;color:#0f3460;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">🔄 貼文 → 諮詢轉換路徑</div>
+    <div style="font-size:11px;font-weight:800;color:#5a6e50;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">🔄 貼文 → 諮詢轉換路徑</div>
     <div class="funnel-step">
       <div class="funnel-num">1</div>
       <div class="funnel-content">
@@ -1005,11 +1005,11 @@ footer strong { color:rgba(255,255,255,.8); }
   </div>
 
   <!-- 下一步行動 -->
-  <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:22px 26px;">
-    <div style="font-size:11px;font-weight:800;color:#e84393;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">⚡ 本週立即行動清單</div>
+  <div style="background:linear-gradient(135deg,#3A4A33,#495640);border-radius:16px;padding:22px 26px;">
+    <div style="font-size:11px;font-weight:800;color:#C8A65A;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;">⚡ 本週立即行動清單</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:14px;">
-        <div style="font-size:11px;font-weight:800;color:#e84393;margin-bottom:10px;">🎯 內容</div>
+        <div style="font-size:11px;font-weight:800;color:#C8A65A;margin-bottom:10px;">🎯 內容</div>
         <div style="font-size:11px;color:rgba(255,255,255,.8);line-height:2.2;">
           ☐ 選一個感情/婚姻鉤子句發貼文<br>
           ☐ 寫一篇親子主題的真實故事<br>
@@ -1018,7 +1018,7 @@ footer strong { color:rgba(255,255,255,.8); }
         </div>
       </div>
       <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:14px;">
-        <div style="font-size:11px;font-weight:800;color:#4a9eff;margin-bottom:10px;">🔧 策略</div>
+        <div style="font-size:11px;font-weight:800;color:#C8A65A;margin-bottom:10px;">🔧 策略</div>
         <div style="font-size:11px;color:rgba(255,255,255,.8);line-height:2.2;">
           ☐ 確認四大工具各有一篇示範貼文<br>
           ☐ 準備一個個案故事（已匿名化）<br>
@@ -1028,7 +1028,7 @@ footer strong { color:rgba(255,255,255,.8); }
       </div>
     </div>
     <div style="margin-top:14px;background:rgba(232,67,147,.15);border-radius:10px;padding:12px 16px;font-size:11px;color:rgba(255,255,255,.85);line-height:1.8;">
-      <strong style="color:#e84393;">🧭 核心定位句（每篇貼文的底層邏輯）：</strong><br>
+      <strong style="color:#C8A65A;">🧭 核心定位句（每篇貼文的底層邏輯）：</strong><br>
       「我不是要給你人生答案，我是要幫你讀懂你自己發出的訊號——從感情、身體、事業到家族，一切都有跡可循。」
     </div>
   </div>
