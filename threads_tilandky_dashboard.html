@@ -125,6 +125,27 @@ header p { font-size:12px; opacity:.7; margin-top:5px; position:relative; z-inde
 /* FOOTER */
 footer { background:#3A4A33; color:rgba(255,255,255,.5); text-align:center; padding:20px; font-size:11px; line-height:2; margin-top:20px; }
 footer strong { color:rgba(255,255,255,.8); }
+
+/* ABCD 即時回應總覽 */
+.urgent-panel { max-width:1100px; margin:16px auto 0; background:white; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,.07); padding:18px 22px; }
+.urgent-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.urgent-title { font-size:14px; font-weight:800; color:#3A4A33; }
+.urgent-date { font-size:11px; color:#999; }
+.abcd-legend { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.abcd-chip { padding:4px 10px; border-radius:20px; font-size:10px; font-weight:800; white-space:nowrap; }
+.abcd-a { background:#fde8e8; color:#c0392b; }
+.abcd-b { background:#f9f0d9; color:#7a5a1a; }
+.abcd-c { background:#edf2e8; color:#3A4A33; }
+.abcd-d { background:#eee; color:#888; }
+.urgent-list { display:flex; flex-direction:column; gap:10px; }
+.urgent-item { display:flex; gap:12px; align-items:flex-start; background:#F8F5F0; border-radius:12px; padding:12px 14px; }
+.urgent-item-body { flex:1; }
+.urgent-item-title { font-size:12px; font-weight:800; color:#3A4A33; margin-bottom:4px; }
+.urgent-item-desc { font-size:11.5px; color:#555; line-height:1.6; }
+.urgent-goto { font-size:11px; font-weight:800; color:#495640; text-decoration:none; white-space:nowrap; align-self:center; cursor:pointer; }
+.urgent-goto:hover { color:#C8A65A; }
+.urgent-note { font-size:10.5px; color:#aaa; margin-top:12px; line-height:1.6; }
+.abcd-inline { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; font-size:9px; font-weight:800; margin-right:4px; vertical-align:middle; }
 </style>
 </head>
 <body>
@@ -163,6 +184,31 @@ footer strong { color:rgba(255,255,255,.8); }
   <div class="tab-btn" onclick="switchTab(5)">👨‍👩‍👧 親子/原生家庭</div>
   <div class="tab-btn" onclick="switchTab(6)">🚧 事業/人生定位</div>
   <div class="tab-btn" onclick="switchTab(7)">🏛️ 品牌策略室</div>
+</div>
+
+<!-- ABCD 即時回應總覽 -->
+<div class="urgent-panel">
+  <div class="urgent-head">
+    <span class="urgent-title">🚦 ABCD 意圖分級 · 即時回應總覽</span>
+    <span class="urgent-date">資料範圍：近 48 小時（截至 2026-07-14）</span>
+  </div>
+  <div class="abcd-legend">
+    <span class="abcd-chip abcd-a">A｜明確求助或高風險訊號・建議 24hr 內回應</span>
+    <span class="abcd-chip abcd-b">B｜高共鳴・值得主動互動</span>
+    <span class="abcd-chip abcd-c">C｜情緒共鳴為主・留言即可，不需轉換</span>
+    <span class="abcd-chip abcd-d">D｜歷史／舊有參考・純內容素材，無需回應</span>
+  </div>
+  <div class="urgent-list">
+    <div class="urgent-item">
+      <span class="abcd-chip abcd-b" style="flex-shrink:0;">B</span>
+      <div class="urgent-item-body">
+        <div class="urgent-item-title">@yalin630910（慧玲）· 財運/金錢困境 · 2026-7-14（7小時前，2篇串文）</div>
+        <div class="urgent-item-desc">分享「存款＝選擇權」的個人經驗，正向、非緊急求助，但高共鳴、時效性強——建議 24hr 內以非推銷式留言互動，可延伸限動或 Threads 迴響貼文。</div>
+      </div>
+      <span class="urgent-goto" onclick="switchTab(2)">前往查看 →</span>
+    </div>
+  </div>
+  <div class="urgent-note">本輪近48小時內僅新增以上 1 則貼文需要即時互動；其餘貼文屬歷史／舊有參考資料（多為 C／D 級），僅供內容素材與情緒共鳴引用，非本輪即時回應對象。</div>
 </div>
 
 <!-- ═══════════════════════════════════ -->
@@ -476,7 +522,7 @@ footer strong { color:rgba(255,255,255,.8); }
     <div class="section-label" style="margin-top:8px;">📌 新增貼文（2026-07-14 海巡新增）</div>
 
   <div class="post-card" style="border-top:4px solid #C8A65A">
-    <div class="post-top"><span class="post-badge">11讚 · 存款＝選擇權</span><a class="threads-btn" href="https://www.threads.com/@yalin630910/post/DavQO2lAatn" target="_blank"><svg viewBox="0 0 192 192"><use href="#ti"/></svg>查看原文</a></div>
+    <div class="post-top"><span class="post-badge"><span class="abcd-inline" style="background:#f9f0d9;color:#7a5a1a;">B</span>11讚 · 存款＝選擇權</span><a class="threads-btn" href="https://www.threads.com/@yalin630910/post/DavQO2lAatn" target="_blank"><svg viewBox="0 0 192 192"><use href="#ti"/></svg>查看原文</a></div>
     <div class="post-author">作者：<strong>@yalin630910（慧玲）</strong> · 2026-7-14（7小時前，2篇串文）</div>
     <div class="post-body">存錢，存的從來不是錢，而是「選擇權」。過了50歲才明白：沒有積蓄最殘酷的地方，不是銀行帳戶少了一串數字，而是它會一點一滴拿走妳的底氣——明明在職場受了委屈卻不敢離開，明明一段關係早已消耗殆盡卻不敢轉身，明明身體已發出警訊卻連休息都覺得奢侈。<br><br><strong>真正能救妳的，不是別人一句「我懂妳」，而是妳有沒有底氣轉身、有沒有能力重新開始。少一點情緒內耗，多一點能力累積；少一點討好別人，多一點投資自己。</strong>（#50歲後的人生 #女性成長 #財務獨立）</div>
     <div class="engages"><span class="eng"><span class="icon">❤️</span><span class="big-num">11</span></span><span class="eng"><span class="icon">💬</span> 1 留言</span><span class="eng"><span class="icon">🔁</span> 1 轉發</span></div>
@@ -1230,6 +1276,35 @@ footer strong { color:rgba(255,255,255,.8); }
       提醒：發文延伸內容應轉譯成 Tilandky 自己的語言與案例，不直接複製或大段引用原講座逐字內容。
 
     </div>
+  </div>
+
+  <!-- 本週可用貼文草稿 -->
+  <div style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:20px;border-left:4px solid #C8A65A;">
+    <div style="font-size:11px;font-weight:800;color:#C8A65A;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">📝 本週可用貼文草稿（Threads／IG／FB，Youbi 腳本框架）</div>
+
+    <div style="font-size:11px;font-weight:800;color:#495640;margin-bottom:8px;">💰 主題一：金錢腳本（延伸自 @yalin630910 今日「存款＝選擇權」貼文，建議本週內優先發）</div>
+    <div class="hook-item" style="border-left-color:#495640;">
+      <strong>Threads：</strong>很多人以為「存不住錢」是意志力太差。但我自己的經驗剛好相反——是我一直在演一齣「錢留在身邊不安全」的舊劇本。這齣劇本不是你寫的，是很久以前、某個你早就忘記的場景，替你寫下的。今天你可以做一件事：問自己——我對錢最深的那個感受，第一次出現是什麼時候？留言告訴我，你猜到了嗎？
+    </div>
+    <div class="hook-item" style="border-left-color:#495640;">
+      <strong>IG（圖說）：</strong>存不住錢，不是意志力的問題。是一齣你早就忘記自己在演的劇本。／我陪很多個案走過這段——他們不是不會理財，是心裡有一句更早的台詞在替他們做決定：「留不住錢比較安全」「我不值得擁有太多」。／看懂這句台詞是誰先說的，比逼自己記帳更有用。／如果你也想開始辨識自己的金錢劇本，留言「腳本」，我把第一步驟給你。／#金錢腳本 #豐盛人生 #自我覺察 #Tilandky
+    </div>
+    <div class="hook-item" style="border-left-color:#495640;">
+      <strong>FB：</strong>分享一個最近很有感的觀察：我發現身邊很多朋友，明明很努力賺錢，卻總是留不住。以前我會覺得是理財習慣的問題，後來才發現——很多時候，是我們家裡一直在演一齣關於金錢的舊劇本。「錢是骯髒的」「有錢人都不是好人」「我不配擁有太多」——這些台詞往往不是我們自己說的，是從很早以前、某個場景裡學來的。先看懂這齣劇本，比逼自己記帳、存錢更關鍵。你家裡的金錢劇本，是哪一句台詞在運作呢？歡迎留言分享。
+    </div>
+
+    <div style="font-size:11px;font-weight:800;color:#c0392b;margin:16px 0 8px;">💔 主題二：感情腳本</div>
+    <div class="hook-item" style="border-left-color:#c0392b;">
+      <strong>Threads：</strong>你不是愛錯了人。你是還沒看懂，自己在這段關係裡，一直在演哪一齣劇本。討好、拯救、害怕被拋棄——這些角色不是你選的，是很久以前就寫好的。今天問自己一句：這段關係裡，我到底在等誰的認可？
+    </div>
+    <div class="hook-item" style="border-left-color:#c0392b;">
+      <strong>IG（圖說）：</strong>感情裡最累的，往往不是對方，是你一直在重演的那個角色。／討好型、拯救型、逃避型——每一種都有一句最早的台詞，藏在你還沒意識到的地方。／看懂劇本，不是為了責怪誰，是為了讓你有機會，重新決定接下來要怎麼演。／留言「劇本」，我陪你一起看看你現在在演哪一幕。／#感情腳本 #關係覺察 #Tilandky
+    </div>
+    <div class="hook-item" style="border-left-color:#c0392b;">
+      <strong>FB：</strong>最近陪一位朋友聊感情，她說了一句話讓我印象很深：「我好像每一段關係都在重複同一件事。」這其實很常見——我們在感情裡的模式，往往不是隨機發生的，是一套從小就在演的劇本：可能是不斷討好、不斷拯救對方、或不斷害怕被拋棄而先一步離開。先看懂這齣劇本在演什麼，比急著換對象或逼自己「不要愛太多」更有效。你有沒有發現，自己在感情裡常常重複同一種模式呢？
+    </div>
+
+    <div style="font-size:10.5px;color:#999;margin-top:14px;line-height:1.6;">💡 使用提醒：以上為草稿方向，發文前請依當週實際狀況微調細節與案例，並避免直接引用他人貼文原句；IG／FB 版本可依當下配圖再潤飾長度。</div>
   </div>
 
   <!-- 轉換漏斗 -->
